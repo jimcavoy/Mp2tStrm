@@ -1,5 +1,15 @@
 #include "Pid2TypeMap.h"
 
+#include <string.h>
+
+#ifdef _WIN32
+#define strncpy strncpy_s
+#define stricmp _stricmp
+#else
+#define strncpy strncpy
+#define stricmp strcasecmp
+#endif
+
 namespace
 {
 	char TAG_HDMV[] = { (char)0x48, (char)0x44, (char)0x4D, (char)0x56, (char)0xFF, (char)0x1B, (char)0x44, (char)0x3F, 0 };
@@ -29,14 +39,14 @@ void Pid2TypeMap::update(const lcss::ProgramMapTable& pmt)
 					if (desc.tag() == 0x05)
 					{
 						desc.value((BYTE*)value);
-						strncpy_s(format_identifier, value, 4);
+						strncpy(format_identifier, value, 4);
 						break;
 					}
 					// metadata_descriptor
 					else if (desc.tag() == 0x26)
 					{
 						desc.value((BYTE*)value);
-						strncpy_s(format_identifier, value + 3, 4);
+						strncpy(format_identifier, value + 3, 4);
 						break;
 					}
 				}
@@ -87,7 +97,7 @@ void Pid2TypeMap::update(const lcss::ProgramMapTable& pmt)
 					}
 				}
 
-				if (_stricmp(value, "HEVC") == 0)
+				if (stricmp(value, "HEVC") == 0)
 				{
 					_pid2type.insert({ pe.pid(), STREAM_TYPE::H265 });
 				}

@@ -6,10 +6,10 @@
 
 #include <iostream>
 
-#ifdef WIN32
-#include <Windows.h>
-
 ThetaStream::Mp2tStreamer* pMp2tStreamer;
+
+#ifdef _WIN32
+#include <Windows.h>
 
 BOOL CtrlHandler(DWORD fdwCtrlType)
 {
@@ -31,7 +31,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 #endif
 
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	using namespace std;
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 		cmdline.parse(argc, argv, "Mp2tStrm.exe");
 
 		std::cerr << std::endl << "Enter Ctrl-C to exit" << std::endl << std::endl;
-#ifdef WIN32
+#ifdef _WIN32
 		if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE))
 		{
 			DWORD err = GetLastError();

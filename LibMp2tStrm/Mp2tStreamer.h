@@ -2,6 +2,8 @@
 
 #include "CommandLineParser.h"
 
+#include <memory>
+
 namespace ThetaStream
 {
 	class Mp2tStreamer
@@ -25,7 +27,7 @@ namespace ThetaStream
 
 	private:
 		class Impl;
-		Impl* _pimpl;
+		std::unique_ptr<Impl> _pimpl;
 	};
 }
 

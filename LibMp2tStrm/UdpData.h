@@ -2,6 +2,10 @@
 
 #include <vector>
 
+#ifndef _WIN32
+typedef unsigned char uint8_t;
+#endif
+
 class UdpData
 {
 public:

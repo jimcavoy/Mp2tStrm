@@ -1,8 +1,11 @@
 #include "FileReader.h"
 
+#ifdef _WIN32
 #include <io.h>
+#endif
 #include <fcntl.h>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -15,17 +18,24 @@ FileReader::FileReader(const char* filename, FileReader::QueueType& q, size_t bu
 {
 	if (strcmp(filename, "-") == 0)
 	{
+#ifdef _WIN32
 		_setmode(_fileno(stdin), _O_BINARY);
+#else
 		_ifile.reset(&cin, [](...) {});
+#endif
 	}
 	else
 	{
 		ifstream* tsfile = new std::ifstream(filename, std::ios::binary);
 		if (!tsfile->is_open())
 		{
-			char szErr[BUFSIZ];
+			char szErr[512]{};
+#ifdef _WIN32
 			sprintf_s(szErr, "Failed to open input file %s", filename);
-			std::exception exp(szErr);
+#else
+			sprintf(szErr, "Failed to open input file %s", filename);
+#endif
+			std::runtime_error exp(szErr);
 			throw exp;
 		}
 		_ifile.reset(tsfile);
@@ -59,7 +69,11 @@ uint64_t FileReader::bytes() noexcept
 
 void FileReader::address(char* addr, size_t len) noexcept
 {
+#ifdef _WIN32
 	strcpy_s(addr, len, _address.c_str());
+#else
+	strcpy(addr, _address.c_str());
+#endif
 }
 
 void FileReader::operator()()

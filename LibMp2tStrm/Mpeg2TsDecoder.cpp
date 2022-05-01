@@ -215,16 +215,7 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
 				_pcr0 = pcr1;
 
 				int interval = pcrInterval;
-				// Selection step.  Sometimes the PCR is lost so first 
-				// detect it than select the best value.
-				if (pcrInterval > (2 * timedInterval))
-				{
-					interval = timedInterval;
-#if _DEBUG
-					cerr << "Missing PCR. Interval = " << interval << endl;
-#endif
-				}
-#if _DEBUG
+#ifndef NDEBUG
 				cerr.precision(12);
 				cerr << pcr1 << " " << time_span.count() << " " << pcrInterval << " " << timedInterval << " " << endl;
 #endif

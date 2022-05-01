@@ -18,7 +18,7 @@ set_property(TARGET LibMp2tStrm PROPERTY POSITION_INDEPENDENT_CODE ON)
 if(WIN32)
     target_link_libraries(LibMp2tStrm PRIVATE lcss::libmp2t wsock32 ws2_32)
 else()
-    target_link_libraries(LibMp2tStrm PRIVATE lcss::libmp2t)
+    target_link_libraries(LibMp2tStrm PRIVATE lcss::libmp2t pthread)
     set_target_properties(LibMp2tStrm 
         PROPERTIES
         OUTPUT_NAME Mp2tStrm)

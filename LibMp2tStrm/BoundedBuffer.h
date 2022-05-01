@@ -148,9 +148,15 @@ private:
 		std::swap(_use_ptr, src._use_ptr);
 		std::swap(_maxSize, src._maxSize);
 		std::swap(_count, src._count);
+#ifdef _WIN32
 		std::swap(Mutex, src.Mutex);
 		std::swap(EmptyCV, src.EmptyCV);
 		std::swap(FillCV, src.FillCV);
+#else
+		Mutex = src.Mutex;
+		EmptyCV = src.EmptyCV;
+		FillCV = src.FillCV;
+#endif
 	}
 
 private:

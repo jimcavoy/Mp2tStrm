@@ -112,14 +112,14 @@ void ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
 			msg << usage << endl;
 			msg << endl << "Options: " << endl;
 			msg << opts << endl;
-			std::exception exp(msg.str().c_str());
+			std::runtime_error exp(msg.str().c_str());
 			throw exp;
 		}
 		default:
 		{
 			std::stringstream msg;
 			msg << appname << ": illegal option " << c << endl;
-			std::exception exp(msg.str().c_str());
+			std::runtime_error exp(msg.str().c_str());
 			throw exp;
 		}
 		}

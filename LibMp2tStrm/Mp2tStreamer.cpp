@@ -22,18 +22,18 @@ namespace ThetaStream
 
 ThetaStream::Mp2tStreamer::Mp2tStreamer()
 {
-	_pimpl = new ThetaStream::Mp2tStreamer::Impl;
+	_pimpl = std::make_unique<ThetaStream::Mp2tStreamer::Impl>();
 }
 
 ThetaStream::Mp2tStreamer::Mp2tStreamer(const ThetaStream::CommandLineParser& arguments)
 {
-	_pimpl = new ThetaStream::Mp2tStreamer::Impl;
+	_pimpl = std::make_unique<ThetaStream::Mp2tStreamer::Impl>();
 	_pimpl->_arguments = arguments;
 }
 
 ThetaStream::Mp2tStreamer::~Mp2tStreamer()
 {
-	delete _pimpl;
+
 }
 
 void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& arguments)
