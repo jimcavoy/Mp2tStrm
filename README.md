@@ -6,3 +6,6 @@ will allow clients to retransmit a MPEG-2 TS stream from a file onto an
 IP network.  Unlike Colasoft Packet Player that retransmit video from
 a Wireshark capture file, this tool will allow users to replay a video
 stream from a MPEG-2 TS file.
+
+## Dedependencies
+This project has an external dependency on [libmp2t library](https://github.com/jimcavoy/mp2tp).
