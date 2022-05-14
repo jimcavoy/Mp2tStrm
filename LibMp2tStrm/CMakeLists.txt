@@ -4,6 +4,7 @@ project(LibMp2tStrm)
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+add_compile_definitions(QSIZE=100)
 
 if (WIN32)
     set(CMAKE_INSTALL_LIBDIR $ENV{APPDATA})

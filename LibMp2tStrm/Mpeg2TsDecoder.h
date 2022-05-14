@@ -12,11 +12,13 @@
 #include "PCRClock.h"
 #include "Pid2TypeMap.h"
 #include "UdpData.h"
+#include "FileReader.h"
+#include "UdpSender.h"
 
 class Mpeg2TsDecoder : public lcss::TSParser
 {
-	typedef BoundedBuffer<UdpData> InQueueType;
-	typedef BoundedBuffer<lcss::TransportPacket> OutQueueType;
+	typedef FileReader::QueueType InQueueType;
+	typedef UdpSender::QueueType OutQueueType;
 
 public:
 	Mpeg2TsDecoder(InQueueType& iqueue, OutQueueType& oqueue, int rate);
@@ -48,7 +50,6 @@ private:
 	double _pcr0;
 	int _rate;
 	int _framecount;
-	int _version{ -1 };
 	PCRClock _pcrClock;
 };
 

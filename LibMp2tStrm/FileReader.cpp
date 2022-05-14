@@ -91,7 +91,6 @@ void FileReader::operator()()
 		else
 		{
 			stop();
-			return;
 		}
 	}
 }

@@ -7,10 +7,14 @@
 #include <memory>
 #include <vector>
 
+#ifndef QSIZE
+#define QSIZE 100
+#endif
+
 class FileReader
 {
 public:
-	typedef BoundedBuffer<UdpData> QueueType;
+	typedef BoundedBuffer<UdpData, QSIZE> QueueType;
 
 public:
 	FileReader(const char* filename, QueueType& q, size_t bufsiz);

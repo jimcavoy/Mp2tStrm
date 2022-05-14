@@ -7,11 +7,15 @@
 #include <queue>
 #include <memory>
 
+#ifndef QSIZE
+#define QSIZE 100
+#endif
+
 class UdpSender
 {
 public:
 	typedef lcss::TransportPacket DataType;
-	typedef BoundedBuffer<DataType> QueueType;
+	typedef BoundedBuffer<DataType, QSIZE> QueueType;
 	typedef std::queue<UdpData> UdpQueueType;
 
 public:

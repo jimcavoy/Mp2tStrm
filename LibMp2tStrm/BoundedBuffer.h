@@ -1,21 +1,20 @@
 #pragma once
-#include <vector>
+#include <array>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <iterator>
 
-template<class T>
+template<class T, size_t N>
 class BoundedBuffer
 {
 public:
-	BoundedBuffer(size_t maxSize)
+	BoundedBuffer()
 		:_fill_ptr(0)
 		, _use_ptr(0)
-		, _maxSize(maxSize)
 		, _count(0)
 	{
-		_buffer = std::vector<T>(maxSize);
+		_buffer = std::array<T, N>{};
 	}
 
 	~BoundedBuffer() {}
@@ -23,13 +22,15 @@ public:
 	BoundedBuffer(const BoundedBuffer& orig)
 		:_fill_ptr(orig._fill_ptr)
 		, _use_ptr(orig._use_ptr)
-		, _maxSize(orig._maxSize)
 		, _count(orig._count)
 		, Mutex(orig.Mutex)
 		, EmptyCV(orig.EmptyCV)
 		, FillCV(orig.FillCV)
 	{
-		std::copy(orig._buffer.begin(), orig._buffer.end(), std::back_inserter(_buffer));
+		for (int i = 0; i < orig._buffer.size(); ++i)
+		{
+			_buffer[i] = orig._buffer[i];
+		}
 	}
 
 	BoundedBuffer& operator=(const BoundedBuffer& rhs)
@@ -42,7 +43,6 @@ public:
 	BoundedBuffer(BoundedBuffer&& orig)
 		:_fill_ptr(orig._fill_ptr)
 		, _use_ptr(orig._use_ptr)
-		, _maxSize(orig._maxSize)
 		, _count(orig._count)
 		, Mutex(std::move(orig.Mutex))
 		, EmptyCV(std::move(orig.EmptyCV))
@@ -57,7 +57,6 @@ public:
 		{
 			_fill_ptr = rhs._fill_ptr;
 			_use_ptr = rhs._use_ptr;
-			_maxSize = rhs._maxSize;
 			_count = rhs._count;
 			Mutex = std::move(rhs.Mutex);
 			EmptyCV = std::move(rhs.EmptyCV);
@@ -77,10 +76,8 @@ public:
 		}
 
 		_buffer[_fill_ptr] = data;
-		_fill_ptr = (_fill_ptr + 1) % _maxSize;
+		_fill_ptr = (_fill_ptr + 1) % MAX();
 		_count++;
-
-		
 	}
 
 	void Put(T&& data)
@@ -93,7 +90,7 @@ public:
 		}
 
 		_buffer[_fill_ptr] = std::move(data);
-		_fill_ptr = (_fill_ptr + 1) % _maxSize;
+		_fill_ptr = (_fill_ptr + 1) % MAX();
 		_count++;
 		
 		FillCV.notify_all();
@@ -107,12 +104,13 @@ public:
 		if (hasData)
 		{
 			data = _buffer[_use_ptr];
-			_use_ptr = (_use_ptr + 1) % _maxSize;
+			_use_ptr = (_use_ptr + 1) % MAX();
 			_count--;
 			EmptyCV.notify_all();
 		}
 		return hasData;
 	}
+
 
 	bool Get(T&& data, int timeout)
 	{
@@ -121,7 +119,7 @@ public:
 		if (hasData)
 		{
 			data = std::move(_buffer[_use_ptr]);
-			_use_ptr = (_use_ptr + 1) % _maxSize;
+			_use_ptr = (_use_ptr + 1) % MAX();
 			_count--;
 			EmptyCV.notify_all();
 		}
@@ -136,17 +134,16 @@ private:
 
 	size_t MAX() noexcept
 	{
-		return _maxSize;
+		return _buffer.max_size();
 	}
 
 private:
 	void swap(BoundedBuffer& src)
 	{
-		_buffer = std::vector<T>(src._maxSize);
+		_buffer = std::vector<T, N>{};
 		_buffer.swap(src._buffer);
 		std::swap(_fill_ptr, src._fill_ptr);
 		std::swap(_use_ptr, src._use_ptr);
-		std::swap(_maxSize, src._maxSize);
 		std::swap(_count, src._count);
 #ifdef _WIN32
 		std::swap(Mutex, src.Mutex);
@@ -160,10 +157,9 @@ private:
 	}
 
 private:
-	std::vector<T> _buffer;
+	std::array<T, N> _buffer;
 	size_t _fill_ptr;
 	size_t _use_ptr;
-	size_t _maxSize;
 	size_t _count;
 
 private:

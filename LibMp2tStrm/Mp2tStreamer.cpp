@@ -14,9 +14,9 @@ namespace ThetaStream
 		uint64_t _tsRead{ 0 };
 		uint64_t _udpSent{ 0 };
 		ThetaStream::CommandLineParser _arguments;
-		FileReader* _fileReader;
-		Mpeg2TsDecoder* _decoder;
-		UdpSender* _sender;
+		FileReader* _fileReader{};
+		Mpeg2TsDecoder* _decoder{};
+		UdpSender* _sender{};
 	};
 }
 
@@ -43,8 +43,8 @@ void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& argum
 
 int ThetaStream::Mp2tStreamer::run()
 {
-	FileReader::QueueType reader2decoderQueue(10000);
-	UdpSender::QueueType decoder2senderQueue(10000);
+	FileReader::QueueType reader2decoderQueue;
+	UdpSender::QueueType decoder2senderQueue;
 
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
 	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2senderQueue, _pimpl->_arguments.rate());
