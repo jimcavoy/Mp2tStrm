@@ -20,9 +20,8 @@ FileReader::FileReader(const char* filename, FileReader::QueueType& q, size_t bu
 	{
 #ifdef _WIN32
 		_setmode(_fileno(stdin), _O_BINARY);
-#else
-		_ifile.reset(&cin, [](...) {});
 #endif
+		_ifile.reset(&cin, [](...) {});
 	}
 	else
 	{
