@@ -166,7 +166,7 @@ void UdpSender::operator()()
 	while (_pimpl->_run)
 	{
 		DataType d;
-		const bool hasData = _pimpl->_queue.Get(std::forward<DataType>(d), 200);
+		const bool hasData = _pimpl->_queue.Get(std::move(d), 200);
 		if (hasData)
 		{
 			addToQueue(d);
@@ -229,7 +229,7 @@ void UdpSender::addToQueue(const DataType& tsData)
 
 	if (_pimpl->_udpData.length() > BUFLEN)
 	{
-		_pimpl->_udpQueue.push(std::forward<UdpData>(_pimpl->_udpData));
+		_pimpl->_udpQueue.push(std::move(_pimpl->_udpData));
 	}
 	_pimpl->_udpData.write(tsData.data(), lcss::TransportPacket::TS_SIZE);
 }

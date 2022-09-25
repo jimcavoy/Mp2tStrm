@@ -230,5 +230,5 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
 
 void Mpeg2TsDecoder::outputPacket(lcss::TransportPacket& pckt)
 {
-	_outQueue.Put(std::forward<lcss::TransportPacket>(pckt));
+	_outQueue.Put(std::move(pckt));
 }
