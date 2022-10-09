@@ -43,6 +43,16 @@ namespace ThetaStream
 	{
 	public:
 		Impl() {}
+		Impl(const Impl& other)
+			:destinationPort(other.destinationPort)
+			, ttl(other.ttl)
+			, rateAdjustment(other.rateAdjustment)
+			, sourceFile(other.sourceFile)
+			, ifaceAddr(other.ifaceAddr)
+		{
+
+		}
+		~Impl() {}
 
 	public:
 		int destinationPort{ 50000 };
@@ -64,20 +74,31 @@ ThetaStream::CommandLineParser::~CommandLineParser()
 }
 
 ThetaStream::CommandLineParser::CommandLineParser(const CommandLineParser& other)
+	:_pimpl(std::make_unique<ThetaStream::CommandLineParser::Impl>(*other._pimpl))
 {
-	_pimpl = std::make_unique<ThetaStream::CommandLineParser::Impl>();
-	_pimpl->destinationPort = other.destinationPort();
-	_pimpl->ttl = other.ttl();
-	_pimpl->rateAdjustment = other.rate();
-	_pimpl->sourceFile = other.sourceFile();
-	_pimpl->destinationIP = other.destinationIp();
-	_pimpl->ifaceAddr = other.interfaceAddress();
+
 }
 
 ThetaStream::CommandLineParser& ThetaStream::CommandLineParser::operator=(const ThetaStream::CommandLineParser& rhs)
 {
-	ThetaStream::CommandLineParser temp(rhs);
-	swap(temp);
+	if (this != &rhs)
+	{
+		_pimpl.reset(new ThetaStream::CommandLineParser::Impl(*rhs._pimpl));
+	}
+	return *this;
+}
+
+ThetaStream::CommandLineParser::CommandLineParser(CommandLineParser&& other) noexcept
+{
+	*this = std::move(other);
+}
+
+ThetaStream::CommandLineParser& ThetaStream::CommandLineParser::operator=(CommandLineParser&& rhs) noexcept
+{
+	if (this != &rhs)
+	{
+		_pimpl = std::move(rhs._pimpl);
+	}
 	return *this;
 }
 
@@ -159,12 +180,3 @@ int ThetaStream::CommandLineParser::rate() const
 	return _pimpl->rateAdjustment;
 }
 
-void ThetaStream::CommandLineParser::swap(ThetaStream::CommandLineParser& other)
-{
-	std::swap(_pimpl->destinationPort, other._pimpl->destinationPort);
-	std::swap(_pimpl->ttl, other._pimpl->ttl);
-	std::swap(_pimpl->rateAdjustment, other._pimpl->rateAdjustment);
-	_pimpl->destinationIP.swap(other._pimpl->destinationIP);
-	_pimpl->sourceFile.swap(other._pimpl->sourceFile);
-	_pimpl->ifaceAddr.swap(other._pimpl->ifaceAddr);
-}

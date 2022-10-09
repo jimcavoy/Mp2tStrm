@@ -11,6 +11,21 @@ namespace ThetaStream
 	class Mp2tStreamer::Impl
 	{
 	public:
+		Impl() {}
+		Impl(ThetaStream::CommandLineParser cmdline)
+			:_arguments(cmdline)
+		{}
+
+		Impl(const Impl& other)
+			:_tsRead(other._tsRead)
+			, _udpSent(other._udpSent)
+			, _arguments(other._arguments)
+			, _fileReader(other._fileReader)
+			, _decoder(other._decoder)
+			, _sender(other._sender)
+		{}
+		~Impl() {};
+	public:
 		uint64_t _tsRead{ 0 };
 		uint64_t _udpSent{ 0 };
 		ThetaStream::CommandLineParser _arguments;
@@ -27,8 +42,7 @@ ThetaStream::Mp2tStreamer::Mp2tStreamer()
 
 ThetaStream::Mp2tStreamer::Mp2tStreamer(const ThetaStream::CommandLineParser& arguments)
 {
-	_pimpl = std::make_unique<ThetaStream::Mp2tStreamer::Impl>();
-	_pimpl->_arguments = arguments;
+	_pimpl = std::make_unique<ThetaStream::Mp2tStreamer::Impl>(arguments);
 }
 
 ThetaStream::Mp2tStreamer::~Mp2tStreamer()
