@@ -84,8 +84,7 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 			auto it = _pat.find(pckt.PID());
 			if (it->second != 0)
 			{
-				_pmt.clear();
-				_pmt.add(data, pckt.data_byte());
+				_pmt = lcss::ProgramMapTable(data, pckt.data_byte());
 				if (_pmt.parse())
 				{
 					_pmtHelper.update(_pmt);
