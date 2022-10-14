@@ -4,3 +4,21 @@
 
 /.vs
 /out
+/x64
+/CMakeFiles
+/LibMp2tStrm/Debug
+/LibMp2tStrm//Release
+/LibMp2tStrm/CMakeFiles
+/LibMp2tStrm/LibMp2tStrm.dir
+/Mp2tStrm/CMakeFiles
+/Mp2tStrm/Mp2tStrm.dir
+*.vcxproj
+*.filters
+*.user
+*.tlog
+*.obj
+*.exe
+*.pdb
+*.sln
+cmake_install.cmake
+CMakeCache.txt
