@@ -7,11 +7,19 @@
 #include <queue>
 #include <memory>
 
+#ifdef PERFCNTR
+#include "Mp2tPerfCntr/BaseIOInterface.h"
+#endif 
+
 #ifndef QSIZE
 #define QSIZE 100
 #endif
 
+
 class UdpSender
+#ifdef PERFCNTR
+	: public BaseIOInterface
+#endif
 {
 public:
 	typedef lcss::TransportPacket DataType;

@@ -7,7 +7,9 @@
 #include "tspat.h"
 #include "tspmt.h"
 #include "tspckt.h"
-
+#ifdef PERFCNTR
+#include "Mp2tPerfCntr/BaseIOInterface.h"
+#endif
 #include "BoundedBuffer.h"
 #include "PCRClock.h"
 #include "Pid2TypeMap.h"
@@ -16,6 +18,9 @@
 #include "UdpSender.h"
 
 class Mpeg2TsDecoder : public lcss::TSParser
+#ifdef PERFCNTR
+	, BaseIOInterface
+#endif
 {
 	typedef FileReader::QueueType InQueueType;
 	typedef UdpSender::QueueType OutQueueType;
