@@ -4,6 +4,12 @@
 #include "Mpeg2TsDecoder.h"
 #include "UdpSender.h"
 
+#ifdef PERFCNTR
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#include <wtypes.h>
+#include "Mp2tPerfCntr/Mp2tStrmCounter.h"
+#endif
+
 #include <thread>
 
 namespace ThetaStream
@@ -67,6 +73,9 @@ int ThetaStream::Mp2tStreamer::run()
 		decoder2senderQueue,
 		_pimpl->_arguments.ttl(),
 		_pimpl->_arguments.interfaceAddress());
+#ifdef PERFCNTR
+	Mp2tStrmCounter perfCounter(freader, decoder, sender);
+#endif
 
 	_pimpl->_fileReader = &freader;
 	_pimpl->_decoder = &decoder;
@@ -75,14 +84,20 @@ int ThetaStream::Mp2tStreamer::run()
 	std::thread readerThread{ &FileReader::operator(), &freader };
 	std::thread decoderThread{ &Mpeg2TsDecoder::operator(), &decoder };
 	std::thread senderThread{ &UdpSender::operator(), &sender };
+#ifdef PERFCNTR
+	std::thread perfCounterThread{ &Mp2tStrmCounter::operator(), &perfCounter };
+#endif
 
 	readerThread.join();
 	decoderThread.join();
 	senderThread.join();
-
+#ifdef PERFCNTR
+	perfCounter.stop();
+	perfCounterThread.join();
+#else
 	_pimpl->_tsRead = freader.count();
 	_pimpl->_udpSent = sender.count();
-
+#endif
 	return 0;
 }
 
