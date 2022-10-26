@@ -19,7 +19,11 @@ include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libmp2t/libmp2tTargets.cmake)
 # Add source to this project's executable.
 add_executable (Mp2tStrm "main.cpp" )
 
-list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t)
+if (CMAKE_VS_PLATFORM_NAME)
+    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t Mp2tPerfCntr)
+else()
+    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t)
+endif()
 
 target_link_libraries(Mp2tStrm PUBLIC ${EXTRA_LIBS})
 

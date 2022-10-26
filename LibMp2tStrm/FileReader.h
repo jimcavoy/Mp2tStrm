@@ -1,5 +1,4 @@
 #pragma once
-
 #include "BoundedBuffer.h"
 #include "UdpData.h"
 
@@ -7,11 +6,18 @@
 #include <memory>
 #include <vector>
 
+#ifdef PERFCNTR
+#include "Mp2tPerfCntr/BaseIOInterface.h"
+#endif
+
 #ifndef QSIZE
 #define QSIZE 100
 #endif
 
 class FileReader
+#ifdef PERFCNTR
+	: public BaseIOInterface
+#endif
 {
 public:
 	typedef BoundedBuffer<UdpData, QSIZE> QueueType;
