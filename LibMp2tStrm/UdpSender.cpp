@@ -41,6 +41,11 @@ public:
 	{}
 
 public:
+	void addToQueue(const DataType& data);
+	void poll();
+	void send(const UdpData& data);
+
+public:
 	bool _run{ true };
 	SOCKET _socket{};
 	sockaddr_in _recvAddr{};
@@ -169,8 +174,8 @@ void UdpSender::operator()()
 		const bool hasData = _pimpl->_queue.Get(std::move(d), 200);
 		if (hasData)
 		{
-			addToQueue(d);
-			poll();
+			_pimpl->addToQueue(d);
+			_pimpl->poll();
 		}
 		else
 		{
@@ -179,14 +184,14 @@ void UdpSender::operator()()
 	}
 }
 
-void UdpSender::send(const UdpData& data)
+void UdpSender::Impl::send(const UdpData& data)
 {
-	const int status = sendto(_pimpl->_socket,
+	const int status = sendto(_socket,
 		(char*)data.data(),
 		(int)data.length(),
 		0,
-		(SOCKADDR*)&_pimpl->_recvAddr,
-		sizeof(_pimpl->_recvAddr));
+		(SOCKADDR*)&_recvAddr,
+		sizeof(_recvAddr));
 
 	if (status == SOCKET_ERROR)
 	{
@@ -198,8 +203,8 @@ void UdpSender::send(const UdpData& data)
 	}
 	else
 	{
-		_pimpl->_count++;
-		_pimpl->_bytes += data.length();
+		_count++;
+		_bytes += data.length();
 	}
 }
 
@@ -224,21 +229,21 @@ void UdpSender::address(char* addr, size_t len) noexcept
 #endif
 }
 
-void UdpSender::addToQueue(const DataType& tsData)
+void UdpSender::Impl::addToQueue(const DataType& tsData)
 {
 
-	if (_pimpl->_udpData.length() > BUFLEN)
+	if (_udpData.length() > BUFLEN)
 	{
-		_pimpl->_udpQueue.push(std::move(_pimpl->_udpData));
+		_udpQueue.push(std::move(_udpData));
 	}
-	_pimpl->_udpData.write(tsData.data(), lcss::TransportPacket::TS_SIZE);
+	_udpData.write(tsData.data(), lcss::TransportPacket::TS_SIZE);
 }
 
-void UdpSender::poll()
+void UdpSender::Impl::poll()
 {
-	if (_pimpl->_run && !_pimpl->_udpQueue.empty())
+	if (_run && !_udpQueue.empty())
 	{
-		send(_pimpl->_udpQueue.front());
-		_pimpl->_udpQueue.pop();
+		send(_udpQueue.front());
+		_udpQueue.pop();
 	}
 }

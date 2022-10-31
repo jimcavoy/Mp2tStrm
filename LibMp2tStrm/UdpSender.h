@@ -41,11 +41,6 @@ public:
 	void address(char* addr, size_t len) noexcept;
 
 private:
-	void addToQueue(const DataType& data);
-	void poll();
-	void send(const UdpData& data);
-
-private:
 	class Impl;
 	std::unique_ptr<Impl> _pimpl;
 };
