@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
 		pMp2tStreamer = &streamer;
 		int ret = streamer.run();
 
-		cerr << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
-		cerr << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
+		cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
+		cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
 
 		return ret;
 	}
