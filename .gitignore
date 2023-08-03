@@ -12,6 +12,8 @@
 /LibMp2tStrm/LibMp2tStrm.dir
 /Mp2tStrm/CMakeFiles
 /Mp2tStrm/Mp2tStrm.dir
+/Mp2tStrm/Debug
+/Mp2tStrm/Release
 *.vcxproj
 *.filters
 *.user
@@ -23,3 +25,4 @@
 cmake_install.cmake
 CMakeCache.txt
 *.lib
+CTestTestfile.cmake

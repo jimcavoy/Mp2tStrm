@@ -223,6 +223,10 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
 					cerr << "Missing PCR. Interval = " << interval << endl;
 #endif
 				}
+				else if (pcrInterval > timedInterval)
+				{
+					interval = timedInterval;
+				}
 #ifndef NDEBUG
 				cerr.precision(12);
 				cerr << pcr1 << " " << time_span.count() << " " << pcrInterval << " " << timedInterval << " " << endl;

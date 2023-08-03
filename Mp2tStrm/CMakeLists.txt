@@ -20,7 +20,7 @@ include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libmp2t/libmp2tTargets.cmake)
 add_executable (Mp2tStrm "main.cpp" )
 
 if (CMAKE_VS_PLATFORM_NAME)
-    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t Mp2tPerfCntr)
+    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t ${PROJECT_SOURCE_DIR}/../../x64/Release/Mp2tPerfCntr.lib)
 else()
     list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t)
 endif()
