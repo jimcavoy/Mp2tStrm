@@ -2,6 +2,7 @@
 
 #include "FileReader.h"
 #include "Mpeg2TsDecoder.h"
+#include "Mpeg2TsProber.h"
 #include "UdpSender.h"
 
 #ifdef PERFCNTR
@@ -10,7 +11,62 @@
 #include "Mp2tPerfCntr/Mp2tStrmCounter.h"
 #endif
 
+#ifdef _WIN32
+#include <io.h>
+#endif
+#include <fcntl.h>
+#include <iostream>
+#include <string.h>
 #include <thread>
+
+namespace
+{
+	void ReadFile(Mpeg2TsProber& prober, const char* filename)
+	{
+		using namespace std;
+		std::shared_ptr<std::istream> ifile;
+		std::array<BYTE, 9212> buffer;
+
+		if (strcmp(filename, "-") == 0)
+		{
+#ifdef _WIN32
+			_setmode(_fileno(stdin), _O_BINARY);
+#endif
+			ifile.reset(&cin, [](...) {});
+		}
+		else
+		{
+			ifstream* tsfile = new std::ifstream(filename, std::ios::binary);
+			if (!tsfile->is_open())
+			{
+				char szErr[512]{};
+#ifdef _WIN32
+				sprintf_s(szErr, "Failed to open input file %s", filename);
+#else
+				sprintf(szErr, "Failed to open input file %s", filename);
+#endif
+				std::runtime_error exp(szErr);
+				throw exp;
+			}
+			ifile.reset(tsfile);
+		}
+
+		while (true)
+		{
+			if (ifile->good())
+			{
+				ifile->read((char*)buffer.data(), 9212);
+				const streamsize len = ifile->gcount();
+				prober.parse(buffer.data(), len);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
+}
 
 namespace ThetaStream
 {
@@ -65,6 +121,12 @@ int ThetaStream::Mp2tStreamer::run()
 {
 	FileReader::QueueType reader2decoderQueue;
 	UdpSender::QueueType decoder2senderQueue;
+
+	// Probe file
+	Mpeg2TsProber prober;
+	ReadFile(prober, _pimpl->_arguments.sourceFile());
+
+	std::cout << "Duration: " << prober.duration() << std::endl;
 
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
 	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2senderQueue, _pimpl->_arguments.rate());
