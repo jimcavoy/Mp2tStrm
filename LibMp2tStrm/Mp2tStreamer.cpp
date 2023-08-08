@@ -127,6 +127,9 @@ int ThetaStream::Mp2tStreamer::run()
 	ReadFile(prober, _pimpl->_arguments.sourceFile());
 
 	std::cout << "Duration: " << prober.duration() << std::endl;
+	std::cout << "Average Bitrate: " << prober.averageBitrate() << std::endl;
+	std::cout << "Metadata Carriage: " << prober.metadataCarriage() << std::endl;
+	std::cout << "Metadata Frequency: " << prober.metadataFrequency() << std::endl;
 
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
 	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2senderQueue, _pimpl->_arguments.rate());

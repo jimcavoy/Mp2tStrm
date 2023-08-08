@@ -3,6 +3,7 @@
 #include "tsprsr.h"
 
 #include <memory>
+#include <string>
 
 class Mpeg2TsProber : public lcss::TSParser
 {
@@ -13,6 +14,9 @@ public:
 	virtual void onPacket(lcss::TransportPacket& pckt) override;
 
 	double duration() const;
+	double averageBitrate() const;
+	std::string metadataCarriage() const;
+	int metadataFrequency() const;
 
 private:
 	class Impl;

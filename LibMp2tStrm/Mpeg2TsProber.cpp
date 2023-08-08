@@ -181,4 +181,25 @@ double Mpeg2TsProber::duration() const
 	return _pimpl->_curPTS - _pimpl->_startPTS;
 }
 
+double Mpeg2TsProber::averageBitrate() const
+{
+	return (packetCount() * 188 * 8) / (duration() * 1000);
+}
+
+std::string Mpeg2TsProber::metadataCarriage() const
+{
+	switch (_pimpl->_metadataCarriage)
+	{
+	case 0: return "No Metadata"; break;
+	case 1: return "Synchronous"; break;
+	case 2: return "Asynchronous"; break;
+	default: return "Unknown";
+	}
+}
+
+int Mpeg2TsProber::metadataFrequency() const
+{
+	return _pimpl->_klvSetCount;
+}
+
 
