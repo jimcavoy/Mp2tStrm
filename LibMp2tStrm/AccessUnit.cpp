@@ -60,12 +60,12 @@ size_t AccessUnit::size() const
 	return _units.size();
 }
 
-unsigned long long AccessUnit::timestamp() const
+uint64_t AccessUnit::timestamp() const
 {
 	return _timestamp;
 }
 
-void AccessUnit::setTimestamp(unsigned long long ts)
+void AccessUnit::setTimestamp(uint64_t ts)
 {
 	_timestamp = ts;
 }

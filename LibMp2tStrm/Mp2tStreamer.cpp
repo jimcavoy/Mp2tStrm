@@ -3,6 +3,7 @@
 #include "FileReader.h"
 #include "Mpeg2TsDecoder.h"
 #include "Mpeg2TsProber.h"
+#include "RateLimiter.h"
 #include "UdpSender.h"
 
 #ifdef PERFCNTR
@@ -84,6 +85,7 @@ namespace ThetaStream
 			, _arguments(other._arguments)
 			, _fileReader(other._fileReader)
 			, _decoder(other._decoder)
+			, _limiter(other._limiter)
 			, _sender(other._sender)
 		{}
 		~Impl() {};
@@ -93,6 +95,7 @@ namespace ThetaStream
 		ThetaStream::CommandLineParser _arguments;
 		FileReader* _fileReader{};
 		Mpeg2TsDecoder* _decoder{};
+		RateLimiter* _limiter{};
 		UdpSender* _sender{};
 	};
 }
@@ -120,7 +123,8 @@ void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& argum
 int ThetaStream::Mp2tStreamer::run()
 {
 	FileReader::QueueType reader2decoderQueue;
-	UdpSender::QueueType decoder2senderQueue;
+	UdpSender::QueueType decoder2LimiterQueue;
+	UdpSender::QueueType limiter2senderQueue;
 
 	// Probe file
 	Mpeg2TsProber prober;
@@ -135,10 +139,11 @@ int ThetaStream::Mp2tStreamer::run()
 	std::cout << "Resolution: " << prober.h264Prober().width() << "x" << prober.h264Prober().height() << std::endl << std::endl;
 
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
-	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2senderQueue, _pimpl->_arguments.rate());
+	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2LimiterQueue, _pimpl->_arguments.rate());
+	RateLimiter limiter(decoder2LimiterQueue, limiter2senderQueue);
 	UdpSender sender(_pimpl->_arguments.destinationIp(),
 		_pimpl->_arguments.destinationPort(),
-		decoder2senderQueue,
+		limiter2senderQueue,
 		_pimpl->_arguments.ttl(),
 		_pimpl->_arguments.interfaceAddress());
 #ifdef PERFCNTR
@@ -147,10 +152,12 @@ int ThetaStream::Mp2tStreamer::run()
 
 	_pimpl->_fileReader = &freader;
 	_pimpl->_decoder = &decoder;
+	_pimpl->_limiter = &limiter;
 	_pimpl->_sender = &sender;
 
 	std::thread readerThread{ &FileReader::operator(), &freader };
 	std::thread decoderThread{ &Mpeg2TsDecoder::operator(), &decoder };
+	std::thread limiterThread{ &RateLimiter::operator(), & limiter};
 	std::thread senderThread{ &UdpSender::operator(), &sender };
 #ifdef PERFCNTR
 	std::thread perfCounterThread{ &Mp2tStrmCounter::operator(), &perfCounter };
@@ -158,6 +165,7 @@ int ThetaStream::Mp2tStreamer::run()
 
 	readerThread.join();
 	decoderThread.join();
+	limiterThread.join();
 	senderThread.join();
 #ifdef PERFCNTR
 	perfCounter.stop();
@@ -173,6 +181,7 @@ void ThetaStream::Mp2tStreamer::stop()
 {
 	_pimpl->_fileReader->stop();
 	_pimpl->_decoder->stop();
+	_pimpl->_limiter->stop();
 	_pimpl->_sender->stop();
 }
 

@@ -23,13 +23,13 @@ public:
 
 	size_t size() const;
 
-	unsigned long long timestamp() const;
-	void setTimestamp(unsigned long long ts);
+	uint64_t timestamp() const;
+	void setTimestamp(uint64_t ts);
 
 	iterator begin();
 	iterator end();
 
 private:
 	std::vector<lcss::TransportPacket> _units;
-	unsigned long long _timestamp{};
+	uint64_t _timestamp{};
 };
