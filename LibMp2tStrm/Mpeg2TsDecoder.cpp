@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cassert>
 
 static auto t0 = std::chrono::steady_clock::now();
 
@@ -104,8 +105,20 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 				case Pid2TypeMap::STREAM_TYPE::H265:
 				case Pid2TypeMap::STREAM_TYPE::HDMV:
 				{
-					//PrintTimestamp("Video", pes);
+					//PrintTimestamp("Video", pes, _pcrClock);
 					_framecount++;
+					if (_currentAU.size() > 0)
+					{
+						_outQueue.Put(std::move(_currentAU));
+					}
+
+					if (_currentAU.timestamp() == 0)
+					{
+						UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
+						UINT64 ts = pts_dts_flag == 0xC0 ? pes.dts() : pes.pts();
+						assert(ts != 0);
+						_currentAU.setTimestamp(ts);
+					}
 					break;
 				}
 				case Pid2TypeMap::STREAM_TYPE::AUDIO:
@@ -139,7 +152,7 @@ void Mpeg2TsDecoder::operator()()
 	//using namespace std;
 
 	// Print the header for the csv file
-	//cout << "Type,PTS,PTS(secs),DTS,DTS(secs),Wallclock,PCR" << endl;
+	// cout << "Type,PTS,PTS(secs),DTS,DTS(secs),Wallclock,PCR" << endl;
 
 	while (_run)
 	{
@@ -242,5 +255,5 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
 
 void Mpeg2TsDecoder::outputPacket(lcss::TransportPacket& pckt)
 {
-	_outQueue.Put(std::move(pckt));
+	_currentAU.add(std::move(pckt));
 }

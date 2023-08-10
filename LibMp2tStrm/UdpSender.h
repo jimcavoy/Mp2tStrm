@@ -3,6 +3,7 @@
 #include "BoundedBuffer.h"
 #include "tspckt.h"
 #include "UdpData.h"
+#include "AccessUnit.h"
 
 #include <queue>
 #include <memory>
@@ -22,7 +23,7 @@ class UdpSender
 #endif
 {
 public:
-	typedef lcss::TransportPacket DataType;
+	typedef AccessUnit DataType;
 	typedef BoundedBuffer<DataType, QSIZE> QueueType;
 	typedef std::queue<UdpData> UdpQueueType;
 

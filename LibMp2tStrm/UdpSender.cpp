@@ -41,7 +41,7 @@ public:
 	{}
 
 public:
-	void addToQueue(const DataType& data);
+	void process(AccessUnit& data);
 	void poll();
 	void send(const UdpData& data);
 
@@ -170,12 +170,11 @@ void UdpSender::operator()()
 {
 	while (_pimpl->_run)
 	{
-		DataType d;
+		AccessUnit d;
 		const bool hasData = _pimpl->_queue.Get(std::move(d), 200);
 		if (hasData)
 		{
-			_pimpl->addToQueue(d);
-			_pimpl->poll();
+			_pimpl->process(d);
 		}
 		else
 		{
@@ -229,14 +228,19 @@ void UdpSender::address(char* addr, size_t len) noexcept
 #endif
 }
 
-void UdpSender::Impl::addToQueue(const DataType& tsData)
+void UdpSender::Impl::process(AccessUnit& au)
 {
-
-	if (_udpData.length() > BUFLEN)
+	for (auto& ts : au)
 	{
-		_udpQueue.push(std::move(_udpData));
+		if (_udpData.length() > BUFLEN)
+		{
+			_udpQueue.push(std::move(_udpData));
+			poll();
+		}
+		_udpData.write(ts.data(), lcss::TransportPacket::TS_SIZE);
 	}
-	_udpData.write(tsData.data(), lcss::TransportPacket::TS_SIZE);
+
+
 }
 
 void UdpSender::Impl::poll()

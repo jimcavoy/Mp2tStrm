@@ -49,10 +49,17 @@ int main(int argc, char *argv[])
 			return err;
 		}
 #endif
+		clock_t start, end;
 
 		ThetaStream::Mp2tStreamer streamer(cmdline);
 		pMp2tStreamer = &streamer;
+
+		start = clock();
 		int ret = streamer.run();
+		end = clock();
+
+		double dif = (double)(end - start) / CLOCKS_PER_SEC;
+		fprintf_s(stderr, "\nElapsed time is %2.3lf seconds.\n\n", dif);
 
 		cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
 		cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;

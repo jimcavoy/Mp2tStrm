@@ -8,6 +8,7 @@
 #include "tspmt.h"
 #include "tspckt.h"
 
+#include "AccessUnit.h"
 #include "BoundedBuffer.h"
 #include "PCRClock.h"
 #include "Pid2TypeMap.h"
@@ -58,5 +59,6 @@ private:
 	int _rate;
 	int _framecount;
 	PCRClock _pcrClock;
+	AccessUnit _currentAU;
 };
 
