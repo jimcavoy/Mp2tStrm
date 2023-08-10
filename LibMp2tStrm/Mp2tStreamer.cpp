@@ -131,6 +131,9 @@ int ThetaStream::Mp2tStreamer::run()
 	std::cout << "Metadata Carriage: " << prober.metadataCarriage() << std::endl;
 	std::cout << "Metadata Frequency: " << prober.metadataFrequency() << std::endl;
 
+	std::cout << "Frame/Seconds: " << prober.h264Prober().framePerSecond() << std::endl;
+	std::cout << "Resolution: " << prober.h264Prober().width() << "x" << prober.h264Prober().height() << std::endl << std::endl;
+
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
 	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2senderQueue, _pimpl->_arguments.rate());
 	UdpSender sender(_pimpl->_arguments.destinationIp(),

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tsprsr.h"
+#include "H264Prober.h"
 
 #include <memory>
 #include <string>
@@ -17,6 +18,8 @@ public:
 	double averageBitrate() const;
 	std::string metadataCarriage() const;
 	int metadataFrequency() const;
+
+	const H264Prober& h264Prober() const;
 
 private:
 	class Impl;

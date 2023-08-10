@@ -2,6 +2,7 @@
 
 #include "PCRClock.h"
 #include "Pid2TypeMap.h"
+#include "H264Prober.h"
 
 #include "tspckt.h"
 #include "tsadptfd.h"
@@ -27,7 +28,7 @@ public:
 	lcss::ProgramMapTable _pmt;
 	double _startPTS;
 	double _curPTS;
-	//H264SummaryParser _h264p;
+	H264Prober _h264p;
 	Pid2TypeMap _pmtProxy;
 	int _metadataCarriage;
 	int _klvSetCount;
@@ -139,7 +140,7 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
 	case Pid2TypeMap::STREAM_TYPE::H264:
 	case Pid2TypeMap::STREAM_TYPE::H265:
 	case Pid2TypeMap::STREAM_TYPE::HDMV:
-		//_h264p.parse((char*)data, pckt.data_byte());
+		_h264p.parse((char*)data, pckt.data_byte());
 		break;
 	}
 }
@@ -200,6 +201,11 @@ std::string Mpeg2TsProber::metadataCarriage() const
 int Mpeg2TsProber::metadataFrequency() const
 {
 	return _pimpl->_klvSetCount;
+}
+
+const H264Prober& Mpeg2TsProber::h264Prober() const
+{
+	return _pimpl->_h264p;
 }
 
 
