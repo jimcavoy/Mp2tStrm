@@ -209,46 +209,6 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
 			BYTE pcr[6]{};
 			adf->getPCR(pcr);
 			_pcrClock.setTime(pcr);
-
-			if (_pcr0 == 0)
-			{
-				_t0 = std::chrono::steady_clock::now();
-				_pcr0 = _pcrClock.timeInSeconds();
-			}
-			else
-			{
-				double pcr1 = _pcrClock.timeInSeconds();
-				auto t1 = steady_clock::now();
-				duration<double> time_span = duration_cast<duration<double>>(t1 - _t0);
-				_t0 = t1;
-
-				int pcrInterval = (int)((pcr1 - _pcr0) * 1000) + _rate;
-				_pcr0 = pcr1;
-				int timedInterval = (int)(time_span.count() * 1000);
-
-				int interval = pcrInterval;
-				// Selection step.  Sometimes the PCR is lost so first 
-				// detect it than select the best value.
-				if (pcrInterval > (2 * timedInterval))
-				{
-					interval = timedInterval;
-#ifndef NDEBUG
-					cerr << "Missing PCR. Interval = " << interval << endl;
-#endif
-				}
-				else if (pcrInterval > timedInterval)
-				{
-					interval = timedInterval;
-				}
-#ifndef NDEBUG
-				cerr.precision(12);
-				cerr << pcr1 << " " << time_span.count() << " " << pcrInterval << " " << timedInterval << " " << endl;
-#endif
-				if (interval > 0)
-				{
-					std::this_thread::sleep_for(chrono::milliseconds(interval));
-				}
-			}
 		}
 	}
 }
