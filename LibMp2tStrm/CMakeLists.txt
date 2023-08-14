@@ -1,20 +1,43 @@
 cmake_minimum_required (VERSION 3.8)
-project(LibMp2tStrm)
+project("LibMp2tStrm"
+    VERSION 1.0 
+    DESCRIPTION "MPEG-2 TS Streamer Library"
+    LANGUAGES C CXX)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_compile_definitions(QSIZE=100)
 
-if (WIN32)
+if (CMAKE_VS_PLATFORM_NAME)
+    set(LOKI_DIRECTORY ../../../../3rdParty/loki/include)
+    set(CMAKE_INSTALL_LIBDIR $ENV{APPDATA})
+elseif (WIN32)
     set(LOKI_DIRECTORY ../../loki-lib/include)
     set(CMAKE_INSTALL_LIBDIR $ENV{APPDATA})
 else()
     set(LOKI_DIRECTORY $ENV{HOME}/.vs/loki-lib/include)
 endif()
 
-include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libmp2t/libmp2tTargets.cmake)
-include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libh264p/libh264pTargets.cmake)
+if (CMAKE_VS_PLATFORM_NAME)
+    include_directories(../../../../Lib/mp2tp/libmp2t)
+    add_library(lcss::libmp2t STATIC IMPORTED)
+    set_target_properties(lcss::libmp2t PROPERTIES
+                 IMPORTED_LOCATION ../../../../Lib/mp2tp/libmp2t/Release/libmp2t.lib
+                 IMPORTED_LOCATION_DEBUG ../../../../Lib/mp2tp/libmp2t/Debug/libmp2t.lib
+                 IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+    include_directories(../../../../Lib/h264p/libh264p)
+    add_library(ThetaStream::libh264p STATIC IMPORTED)
+    set_target_properties(ThetaStream::libh264p PROPERTIES
+                 IMPORTED_LOCATION ../../../../Lib/h264p/libh264p/Release/libh264p.lib
+                 IMPORTED_LOCATION_DEBUG ../../../../Lib/h264p/libh264p/Debug/libh264p.lib
+                 IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+    add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
+else ()
+    include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libmp2t/libmp2tTargets.cmake)
+    include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libh264p/libh264pTargets.cmake)
+endif()
+
 include_directories(${LOKI_DIRECTORY})
 
 file(GLOB SRC_LIST

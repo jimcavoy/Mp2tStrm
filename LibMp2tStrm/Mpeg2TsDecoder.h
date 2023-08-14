@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include <map>
 
 #include "tsprsr.h"
@@ -54,10 +53,7 @@ private:
 	InQueueType& _inQueue;
 	OutQueueType& _outQueue;
 	bool _run;
-	std::chrono::time_point<std::chrono::steady_clock> _t0;
-	double _pcr0;
 	int _rate;
-	int _framecount;
 	PCRClock _pcrClock;
 	AccessUnit _currentAU;
 };

@@ -26,7 +26,7 @@ namespace
 	{
 		using namespace std;
 		std::shared_ptr<std::istream> ifile;
-		std::array<BYTE, 9212> buffer;
+		std::array<BYTE, 18800> buffer;
 
 		if (strcmp(filename, "-") == 0)
 		{
@@ -56,9 +56,9 @@ namespace
 		{
 			if (ifile->good())
 			{
-				ifile->read((char*)buffer.data(), 9212);
+				ifile->read((char*)buffer.data(), 18800);
 				const streamsize len = ifile->gcount();
-				prober.parse(buffer.data(), len);
+				prober.parse(buffer.data(), (UINT32)len);
 			}
 			else
 			{
@@ -147,7 +147,7 @@ int ThetaStream::Mp2tStreamer::run()
 		_pimpl->_arguments.ttl(),
 		_pimpl->_arguments.interfaceAddress());
 #ifdef PERFCNTR
-	Mp2tStrmCounter perfCounter(freader, decoder, sender);
+	Mp2tStrmCounter perfCounter(freader, limiter, sender);
 #endif
 
 	_pimpl->_fileReader = &freader;

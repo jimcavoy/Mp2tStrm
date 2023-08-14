@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-RateLimiter::RateLimiter(QueueType& in, QueueType& out, int fps)
+RateLimiter::RateLimiter(QueueType& in, QueueType& out, double fps)
 	:_inQueue(in)
 	, _outQueue(out)
 	, _framePerSeconds(fps)
 {
-
+	_window = (long) (90'000 / _framePerSeconds);
 }
 
 void RateLimiter::operator() ()
@@ -37,9 +37,25 @@ void RateLimiter::operator() ()
 	}
 }
 
-void RateLimiter::stop()
+void RateLimiter::stop() noexcept
 {
 	_run = false;
+}
+
+uint64_t RateLimiter::count() noexcept
+{
+	uint64_t ret = _framecount;
+	_framecount = 0;
+	return ret;
+}
+
+uint64_t RateLimiter::bytes() noexcept
+{
+	return 0;
+}
+
+void RateLimiter::address(char* addr, size_t len) noexcept
+{
 }
 
 void RateLimiter::poll()
@@ -56,17 +72,18 @@ void RateLimiter::poll()
 		AccessUnit& au = _queue.front();
 		auto timeNow = std::chrono::steady_clock::now();
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(timeNow - _startTime);
-		long clockTime = time_span.count() * 90'000;
-		long auTime = au.timestamp() - _startPts;
-		long diff = abs(clockTime - auTime);
+		uint64_t clockTime = (uint64_t) time_span.count() * 90'000;
+		uint64_t auTime = (long) au.timestamp() - _startPts;
+		long diff = abs((long)clockTime - (long)auTime);
 
-		if (diff < 1000 || au.timestamp() == 0 || au.timestamp() == _startPts)
+		if (diff < _window || au.timestamp() == 0 || au.timestamp() == _startPts)
 		{
 #ifndef NDEBUG
 			std::cout << auTime << ", " << clockTime << ", " << diff << ", " << time_span.count() <<  std::endl;
 #endif
 			_outQueue.Put(std::move(au));
 			_queue.pop();
+			_framecount++;
 		}
 	}
 }

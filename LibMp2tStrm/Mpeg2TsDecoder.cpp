@@ -62,9 +62,7 @@ Mpeg2TsDecoder::Mpeg2TsDecoder(Mpeg2TsDecoder::InQueueType& iqueue, Mpeg2TsDecod
 	:_inQueue(iqueue)
 	, _outQueue(oqueue)
 	, _run(true)
-	, _pcr0(0.0)
 	, _rate(rate)
-	, _framecount(0)
 {
 
 }
@@ -106,7 +104,6 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 				case Pid2TypeMap::STREAM_TYPE::HDMV:
 				{
 					//PrintTimestamp("Video", pes, _pcrClock);
-					_framecount++;
 					if (_currentAU.size() > 0)
 					{
 						_outQueue.Put(std::move(_currentAU));
@@ -182,9 +179,7 @@ void Mpeg2TsDecoder::stop() noexcept
 
 uint64_t Mpeg2TsDecoder::count() noexcept
 {
-	uint64_t ret = _framecount;
-	_framecount = 0;
-	return ret;
+	return 0.0;
 }
 
 uint64_t Mpeg2TsDecoder::bytes() noexcept

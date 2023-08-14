@@ -2,7 +2,10 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
-project(Mp2tStrm)
+project("Mp2tStrm"
+    VERSION 1.0 
+    DESCRIPTION "MPEG-2 TS Streamer Console Application"
+    LANGUAGES C CXX)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
@@ -14,15 +17,32 @@ else()
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
 
-include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libmp2t/libmp2tTargets.cmake)
+if (CMAKE_VS_PLATFORM_NAME)
+    include_directories(../../../../Lib/mp2tp/libmp2t)
+    add_library(lcss::libmp2t STATIC IMPORTED)
+    set_target_properties(lcss::libmp2t PROPERTIES
+                 IMPORTED_LOCATION ../../../../Lib/mp2tp/libmp2t/Release/libmp2t.lib
+                 IMPORTED_LOCATION_DEBUG ../../../../Lib/mp2tp/libmp2t/Debug/libmp2t.lib
+                 IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+    include_directories(../../../../Lib/h264p/libh264p)
+    add_library(ThetaStream::libh264p STATIC IMPORTED)
+    set_target_properties(ThetaStream::libh264p PROPERTIES
+                 IMPORTED_LOCATION ../../../../Lib/h264p/libh264p/Release/libh264p.lib
+                 IMPORTED_LOCATION_DEBUG ../../../../Lib/h264p/libh264p/Debug/libh264p.lib
+                 IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+    add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
+else ()
+    include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libmp2t/libmp2tTargets.cmake)
+    include(${CMAKE_INSTALL_LIBDIR}/lib/cmake/libh264p/libh264pTargets.cmake)
+endif()
 
 # Add source to this project's executable.
 add_executable (Mp2tStrm "main.cpp" )
 
 if (CMAKE_VS_PLATFORM_NAME)
-    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t ${PROJECT_SOURCE_DIR}/../../x64/Release/Mp2tPerfCntr.lib)
+    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t ThetaStream::libh264p ${PROJECT_SOURCE_DIR}/../../x64/Release/Mp2tPerfCntr.lib)
 else()
-    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t)
+    list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t ThetaStream::libh264p)
 endif()
 
 target_link_libraries(Mp2tStrm PUBLIC ${EXTRA_LIBS})
