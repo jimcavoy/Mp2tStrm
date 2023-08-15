@@ -72,9 +72,9 @@ void RateLimiter::poll()
 		AccessUnit& au = _queue.front();
 		auto timeNow = std::chrono::steady_clock::now();
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(timeNow - _startTime);
-		uint64_t clockTime = (uint64_t) time_span.count() * 90'000;
-		uint64_t auTime = (long) au.timestamp() - _startPts;
-		long diff = abs((long)clockTime - (long)auTime);
+		long clockTime = time_span.count() * 90'000;
+		long auTime = (long) au.timestamp() - _startPts;
+		long diff = abs(clockTime - auTime);
 
 		if (diff < _window || au.timestamp() == 0 || au.timestamp() == _startPts)
 		{
