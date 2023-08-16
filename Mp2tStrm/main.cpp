@@ -49,17 +49,20 @@ int main(int argc, char *argv[])
 			return err;
 		}
 #endif
-		clock_t start, end;
-
 		ThetaStream::Mp2tStreamer streamer(cmdline);
 		pMp2tStreamer = &streamer;
 
-		start = clock();
-		int ret = streamer.run();
-		end = clock();
+		streamer.probe();
 
-		double dif = (double)(end - start) / CLOCKS_PER_SEC;
-		fprintf_s(stderr, "\nElapsed time is %2.3lf seconds.\n\n", dif);
+		std::cout << "Duration: " << streamer.duration() << std::endl;
+		std::cout << "Average Bitrate: " << streamer.averageBitrate() << std::endl;
+		std::cout << "Metadata Carriage: " << streamer.metadataCarriage() << std::endl;
+		std::cout << "Metadata Frequency: " << streamer.metadataFrequency() << std::endl;
+
+		std::cout << "Frame/Seconds: " << streamer.framesPerSecond() << std::endl;
+		std::cout << "Resolution: " << streamer.width() << "x" << streamer.height() << std::endl << std::endl;
+
+		int ret = streamer.run();
 
 		cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
 		cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;

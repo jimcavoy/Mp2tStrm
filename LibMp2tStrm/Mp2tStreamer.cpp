@@ -8,7 +8,6 @@
 
 #ifdef PERFCNTR
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#include <wtypes.h>
 #include "Mp2tPerfCntr/Mp2tStrmCounter.h"
 #endif
 
@@ -16,6 +15,7 @@
 #include <io.h>
 #endif
 #include <fcntl.h>
+#include <fstream>
 #include <iostream>
 #include <string.h>
 #include <thread>
@@ -26,7 +26,7 @@ namespace
 	{
 		using namespace std;
 		std::shared_ptr<std::istream> ifile;
-		std::array<BYTE, 18800> buffer;
+		std::array<BYTE, 9212> buffer;
 
 		if (strcmp(filename, "-") == 0)
 		{
@@ -56,7 +56,7 @@ namespace
 		{
 			if (ifile->good())
 			{
-				ifile->read((char*)buffer.data(), 18800);
+				ifile->read((char*)buffer.data(), 9212);
 				const streamsize len = ifile->gcount();
 				prober.parse(buffer.data(), (UINT32)len);
 			}
@@ -89,6 +89,8 @@ namespace ThetaStream
 			, _sender(other._sender)
 		{}
 		~Impl() {};
+
+		void ProbeFile();
 	public:
 		uint64_t _tsRead{ 0 };
 		uint64_t _udpSent{ 0 };
@@ -97,7 +99,13 @@ namespace ThetaStream
 		Mpeg2TsDecoder* _decoder{};
 		RateLimiter* _limiter{};
 		UdpSender* _sender{};
+		Mpeg2TsProber _prober;
 	};
+
+	void Mp2tStreamer::Impl::ProbeFile()
+	{
+		ReadFile(_prober, _arguments.sourceFile());
+	}
 }
 
 ThetaStream::Mp2tStreamer::Mp2tStreamer()
@@ -120,27 +128,20 @@ void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& argum
 	_pimpl->_arguments = arguments;
 }
 
+void ThetaStream::Mp2tStreamer::probe()
+{
+	_pimpl->ProbeFile();
+}
+
 int ThetaStream::Mp2tStreamer::run()
 {
 	FileReader::QueueType reader2decoderQueue;
 	UdpSender::QueueType decoder2LimiterQueue;
 	UdpSender::QueueType limiter2senderQueue;
 
-	// Probe file
-	Mpeg2TsProber prober;
-	ReadFile(prober, _pimpl->_arguments.sourceFile());
-
-	std::cout << "Duration: " << prober.duration() << std::endl;
-	std::cout << "Average Bitrate: " << prober.averageBitrate() << std::endl;
-	std::cout << "Metadata Carriage: " << prober.metadataCarriage() << std::endl;
-	std::cout << "Metadata Frequency: " << prober.metadataFrequency() << std::endl;
-
-	std::cout << "Frame/Seconds: " << prober.h264Prober().framePerSecond() << std::endl;
-	std::cout << "Resolution: " << prober.h264Prober().width() << "x" << prober.h264Prober().height() << std::endl << std::endl;
-
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
 	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2LimiterQueue, _pimpl->_arguments.rate());
-	RateLimiter limiter(decoder2LimiterQueue, limiter2senderQueue, prober.h264Prober().framePerSecond());
+	RateLimiter limiter(decoder2LimiterQueue, limiter2senderQueue, framesPerSecond());
 	UdpSender sender(_pimpl->_arguments.destinationIp(),
 		_pimpl->_arguments.destinationPort(),
 		limiter2senderQueue,
@@ -198,4 +199,39 @@ uint64_t ThetaStream::Mp2tStreamer::tsPacketsRead() const
 uint64_t ThetaStream::Mp2tStreamer::udpPacketsSent() const
 {
 	return _pimpl->_udpSent;
+}
+
+double ThetaStream::Mp2tStreamer::duration() const
+{
+	return _pimpl->_prober.duration();
+}
+
+double ThetaStream::Mp2tStreamer::averageBitrate() const
+{
+	return _pimpl->_prober.averageBitrate();
+}
+
+std::string ThetaStream::Mp2tStreamer::metadataCarriage() const
+{
+	return _pimpl->_prober.metadataCarriage();
+}
+
+int ThetaStream::Mp2tStreamer::metadataFrequency() const
+{
+	return _pimpl->_prober.metadataFrequency();
+}
+
+double ThetaStream::Mp2tStreamer::framesPerSecond() const
+{
+	return _pimpl->_prober.h264Prober().framesPerSecond();
+}
+
+int ThetaStream::Mp2tStreamer::width() const
+{
+	return _pimpl->_prober.h264Prober().width();;
+}
+
+int ThetaStream::Mp2tStreamer::height() const
+{
+	return _pimpl->_prober.h264Prober().height();
 }

@@ -4,8 +4,6 @@
 #include "naluimpl.h"
 #include "loki/Visitor.h"
 
-#include <stdlib.h>
-
 class H264Prober::Impl
 {
 public:
@@ -139,7 +137,7 @@ void H264Prober::onNALUnit(ThetaStream::NALUnit& nalu)
 	_pimpl->onNALUnit(nalu);
 }
 
-double H264Prober::framePerSecond() const
+double H264Prober::framesPerSecond() const
 {
 	return _pimpl->fps;
 }

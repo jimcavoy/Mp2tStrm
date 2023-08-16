@@ -6,8 +6,6 @@
 #include "tsadptfd.h"
 #include "tspes.h"
 #include "tspmt.h"
-#include "tsmetadata.h"
-#include "tsnit.h"
 
 #include <iostream>
 #include <sstream>

@@ -14,7 +14,7 @@ public:
 
 	virtual void onNALUnit(ThetaStream::NALUnit& nalu) override;
 
-	double framePerSecond() const;
+	double framesPerSecond() const;
 	int width() const;
 	int height() const;
 	std::string profile() const;
