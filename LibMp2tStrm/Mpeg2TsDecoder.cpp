@@ -56,11 +56,10 @@ namespace
 
 using namespace std;
 
-Mpeg2TsDecoder::Mpeg2TsDecoder(Mpeg2TsDecoder::InQueueType& iqueue, Mpeg2TsDecoder::OutQueueType& oqueue, int rate)
+Mpeg2TsDecoder::Mpeg2TsDecoder(Mpeg2TsDecoder::InQueueType& iqueue, Mpeg2TsDecoder::OutQueueType& oqueue)
 	:_inQueue(iqueue)
 	, _outQueue(oqueue)
 	, _run(true)
-	, _rate(rate)
 {
 
 }

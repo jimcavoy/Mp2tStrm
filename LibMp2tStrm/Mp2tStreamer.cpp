@@ -140,7 +140,7 @@ int ThetaStream::Mp2tStreamer::run()
 	UdpSender::QueueType limiter2senderQueue;
 
 	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
-	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2LimiterQueue, _pimpl->_arguments.rate());
+	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2LimiterQueue);
 	RateLimiter limiter(decoder2LimiterQueue, limiter2senderQueue, framesPerSecond());
 	UdpSender sender(_pimpl->_arguments.destinationIp(),
 		_pimpl->_arguments.destinationPort(),

@@ -40,6 +40,7 @@ endif()
 add_executable (Mp2tStrm "main.cpp" )
 
 if (CMAKE_VS_PLATFORM_NAME)
+    add_compile_definitions(PERFCNTR)
     list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t ThetaStream::libh264p ${PROJECT_SOURCE_DIR}/../../x64/Release/Mp2tPerfCntr.lib)
 else()
     list(APPEND EXTRA_LIBS LibMp2tStrm lcss::libmp2t ThetaStream::libh264p)

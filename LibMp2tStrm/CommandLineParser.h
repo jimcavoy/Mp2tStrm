@@ -23,7 +23,6 @@ namespace ThetaStream
 		const char* interfaceAddress() const;
 		int destinationPort() const;
 		int ttl() const;
-		int rate() const;
 
 	private:
 		class Impl;

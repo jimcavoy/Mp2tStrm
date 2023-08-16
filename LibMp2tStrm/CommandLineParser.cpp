@@ -11,8 +11,6 @@ const char* opts = "  -s\tThe source MPEG-2 TS file path (default: -).\n \
  -d\tThe destination socket address (ip:port) (default: 127.0.0.1:50000).\n \
  -t\tTime to Live. (default: 16)\n \
  -i\tSpecifies the network interface IP address for the destination stream.\n \
- -r\tAdjust the default playout rate in milliseconds.  Positive values slowsdown \n \
-   \tthe video streaming.\n \
  -?\tPrint this message.";
 
 namespace
@@ -45,7 +43,6 @@ namespace ThetaStream
 		Impl(const Impl& other)
 			:destinationPort(other.destinationPort)
 			, ttl(other.ttl)
-			, rateAdjustment(other.rateAdjustment)
 			, sourceFile(other.sourceFile)
 			, ifaceAddr(other.ifaceAddr)
 		{
@@ -56,7 +53,6 @@ namespace ThetaStream
 	public:
 		int destinationPort{ 50000 };
 		int ttl{ 16 };
-		int rateAdjustment{ 0 };
 		std::string sourceFile{ "-" };
 		std::string destinationIP{ "127.0.0.1" };
 		std::string ifaceAddr;
@@ -105,6 +101,7 @@ void ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
 {
 	string dest;
 	char c{};
+	float rate{};
 
 	while (--argc > 0 && (*++argv)[0] == '-')
 	{
@@ -122,9 +119,6 @@ void ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
 			break;
 		case 't':
 			_pimpl->ttl = std::stoi(*argv + 1);
-			break;
-		case 'r':
-			_pimpl->rateAdjustment = std::stoi(*argv + 1);
 			break;
 		case '?':
 		{
@@ -173,9 +167,3 @@ int ThetaStream::CommandLineParser::ttl() const
 {
 	return _pimpl->ttl;
 }
-
-int ThetaStream::CommandLineParser::rate() const
-{
-	return _pimpl->rateAdjustment;
-}
-

@@ -25,7 +25,7 @@ class Mpeg2TsDecoder : public lcss::TSParser
 	typedef UdpSender::QueueType OutQueueType;
 
 public:
-	Mpeg2TsDecoder(InQueueType& iqueue, OutQueueType& oqueue, int rate);
+	Mpeg2TsDecoder(InQueueType& iqueue, OutQueueType& oqueue);
 
 	void onPacket(lcss::TransportPacket& pckt) override;
 
