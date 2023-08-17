@@ -30,6 +30,8 @@ public:
 
 	void address(char* addr, size_t len) noexcept;
 
+	long position() noexcept;
+
 private:
 	void poll();
 
@@ -43,4 +45,5 @@ private:
 	std::queue<AccessUnit> _queue;
 	long _window;
 	uint64_t _framecount{};
+	long _position{};
 };

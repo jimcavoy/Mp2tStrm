@@ -58,6 +58,11 @@ void RateLimiter::address(char* addr, size_t len) noexcept
 {
 }
 
+long RateLimiter::position() noexcept
+{
+	return _position;
+}
+
 void RateLimiter::poll()
 {
 	std::chrono::steady_clock::time_point zero{};
@@ -81,6 +86,7 @@ void RateLimiter::poll()
 #ifndef NDEBUG
 			std::cout << auTime << ", " << clockTime << ", " << diff << ", " << time_span.count() <<  std::endl;
 #endif
+			_position = auTime;
 			_outQueue.Put(std::move(au));
 			_queue.pop();
 			_framecount++;

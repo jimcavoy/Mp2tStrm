@@ -37,6 +37,8 @@ public:
 
 	uint64_t bytes() noexcept;
 
+	long position() noexcept;
+
 	void address(char* addr, size_t len) noexcept;
 
 private:

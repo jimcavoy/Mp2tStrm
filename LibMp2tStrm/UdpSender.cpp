@@ -225,6 +225,11 @@ void UdpSender::address(char* addr, size_t len) noexcept
 #endif
 }
 
+long UdpSender::position() noexcept
+{
+	return 0;
+}
+
 void UdpSender::Impl::process(AccessUnit& au)
 {
 	for (auto& ts : au)

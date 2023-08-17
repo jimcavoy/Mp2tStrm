@@ -67,6 +67,11 @@ uint64_t FileReader::bytes() noexcept
 	return ret;
 }
 
+long FileReader::position() noexcept
+{
+	return 0;
+}
+
 void FileReader::address(char* addr, size_t len) noexcept
 {
 #ifdef _WIN32

@@ -184,6 +184,11 @@ uint64_t Mpeg2TsDecoder::bytes() noexcept
 	return uint64_t();
 }
 
+long Mpeg2TsDecoder::position() noexcept
+{
+	return 0;
+}
+
 void Mpeg2TsDecoder::address(char* addr, size_t len) noexcept
 {
 }

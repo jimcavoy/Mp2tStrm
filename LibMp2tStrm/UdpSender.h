@@ -40,6 +40,8 @@ public:
 
 	void address(char* addr, size_t len) noexcept;
 
+	long position() noexcept;
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> _pimpl;
