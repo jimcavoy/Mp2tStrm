@@ -1,5 +1,6 @@
 #include "UdpSender.h"
 
+#include <iostream>
 #include <string>
 #include <string.h>
 
@@ -173,10 +174,6 @@ void UdpSender::operator()()
 		{
 			_pimpl->process(d);
 		}
-		else
-		{
-			stop();
-		}
 	}
 }
 
@@ -241,8 +238,6 @@ void UdpSender::Impl::process(AccessUnit& au)
 		}
 		_udpData.write(ts.data(), lcss::TransportPacket::TS_SIZE);
 	}
-
-
 }
 
 void UdpSender::Impl::poll()

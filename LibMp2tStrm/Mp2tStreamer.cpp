@@ -167,6 +167,7 @@ int ThetaStream::Mp2tStreamer::run()
 	readerThread.join();
 	decoderThread.join();
 	limiterThread.join();
+	sender.stop();
 	senderThread.join();
 #ifdef PERFCNTR
 	perfCounter.stop();
