@@ -20,55 +20,6 @@
 #include <string.h>
 #include <thread>
 
-namespace
-{
-	void ReadFile(Mpeg2TsProber& prober, const char* filename)
-	{
-		using namespace std;
-		std::shared_ptr<std::istream> ifile;
-		std::array<BYTE, 9212> buffer;
-
-		if (strcmp(filename, "-") == 0)
-		{
-#ifdef _WIN32
-			_setmode(_fileno(stdin), _O_BINARY);
-#endif
-			ifile.reset(&cin, [](...) {});
-		}
-		else
-		{
-			ifstream* tsfile = new std::ifstream(filename, std::ios::binary);
-			if (!tsfile->is_open())
-			{
-				char szErr[512]{};
-#ifdef _WIN32
-				sprintf_s(szErr, "Failed to open input file %s", filename);
-#else
-				sprintf(szErr, "Failed to open input file %s", filename);
-#endif
-				std::runtime_error exp(szErr);
-				throw exp;
-			}
-			ifile.reset(tsfile);
-		}
-
-		while (true)
-		{
-			if (ifile->good())
-			{
-				ifile->read((char*)buffer.data(), 9212);
-				const streamsize len = ifile->gcount();
-				prober.parse(buffer.data(), (UINT32)len);
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-
-}
-
 namespace ThetaStream
 {
 	class Mp2tStreamer::Impl
@@ -100,11 +51,53 @@ namespace ThetaStream
 		RateLimiter* _limiter{};
 		UdpSender* _sender{};
 		Mpeg2TsProber _prober;
+		std::streamsize _filesize{ 0 };
 	};
 
 	void Mp2tStreamer::Impl::ProbeFile()
 	{
-		ReadFile(_prober, _arguments.sourceFile());
+		using namespace std;
+		std::shared_ptr<std::istream> ifile;
+		std::array<BYTE, 9212> buffer;
+
+		if (strcmp(_arguments.sourceFile(), "-") == 0)
+		{
+#ifdef _WIN32
+			_setmode(_fileno(stdin), _O_BINARY);
+#endif
+			ifile.reset(&cin, [](...) {});
+		}
+		else
+		{
+			ifstream* tsfile = new std::ifstream(_arguments.sourceFile(), std::ios::binary);
+			if (!tsfile->is_open())
+			{
+				char szErr[512]{};
+#ifdef _WIN32
+				sprintf_s(szErr, "Failed to open input file %s", _arguments.sourceFile());
+#else
+				sprintf(szErr, "Failed to open input file %s", filename);
+#endif
+				std::runtime_error exp(szErr);
+				throw exp;
+			}
+			ifile.reset(tsfile);
+		}
+
+		while (true)
+		{
+			if (ifile->good())
+			{
+				ifile->read((char*)buffer.data(), 9212);
+				const streamsize len = ifile->gcount();
+				_prober.parse(buffer.data(), (UINT32)len);
+				_filesize += len;
+			}
+			else
+			{
+				break;
+			}
+		}
 	}
 }
 
@@ -139,7 +132,7 @@ int ThetaStream::Mp2tStreamer::run()
 	UdpSender::QueueType decoder2LimiterQueue;
 	UdpSender::QueueType limiter2senderQueue;
 
-	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, 188 * 49);
+	FileReader freader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, _pimpl->_filesize);
 	Mpeg2TsDecoder decoder(reader2decoderQueue, decoder2LimiterQueue);
 	RateLimiter limiter(decoder2LimiterQueue, limiter2senderQueue, framesPerSecond());
 	UdpSender sender(_pimpl->_arguments.destinationIp(),

@@ -79,17 +79,46 @@ void RateLimiter::poll()
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(timeNow - _startTime);
 		long clockTime = time_span.count() * 90'000;
 		long auTime = (long) au.timestamp() - _startPts;
-		long diff = abs(clockTime - auTime);
 
-		if (diff < _window || au.timestamp() == 0 || au.timestamp() == _startPts)
+		if (inWindow(clockTime, auTime) || 
+			au.timestamp() == 0 || 
+			au.timestamp() == _startPts)
 		{
 #ifndef NDEBUG
-			std::cout << auTime << ", " << clockTime << ", " << diff << ", " << time_span.count() <<  std::endl;
+			std::cout << auTime << ", " << clockTime << ", " << time_span.count() <<  std::endl;
 #endif
 			_position = auTime;
 			_outQueue.Put(std::move(au));
 			_queue.pop();
 			_framecount++;
 		}
+#ifndef NDEBUG
+		else
+		{
+			std::cout << auTime << ", " << clockTime << ", " << time_span.count() << " SKIPPED" << std::endl;
+		}
+#endif
 	}
+}
+
+bool RateLimiter::inWindow(long clocktime, long pts)
+{
+	bool ret = false;
+
+	if (pts == clocktime)
+		ret = true;
+	else if (pts > clocktime)
+	{
+		long diff = abs(clocktime - pts);
+		if (diff < _window)
+		{
+			ret = true;
+		}
+	}
+	else
+	{
+		ret = true;
+	}
+
+	return ret;
 }

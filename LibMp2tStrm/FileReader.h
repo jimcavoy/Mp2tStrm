@@ -3,7 +3,7 @@
 #include "UdpData.h"
 
 #include <memory>
-#include <vector>
+#include <array>
 
 #ifdef PERFCNTR
 #include "Mp2tPerfCntr/BaseIOInterface.h"
@@ -22,7 +22,7 @@ public:
 	typedef BoundedBuffer<UdpData, QSIZE> QueueType;
 
 public:
-	FileReader(const char* filename, QueueType& q, size_t bufsiz);
+	FileReader(const char* filename, QueueType& q, std::streamsize filesize);
 	~FileReader();
 
 	void stop() noexcept;
@@ -43,8 +43,10 @@ private:
 	uint64_t _count;
 	uint64_t _bytes;
 	std::shared_ptr<std::istream> _ifile;
-	std::vector<uint8_t> _buffer;
-	size_t _bufsiz;
+	std::array<uint8_t, 9212> _buffer;
+	size_t _bufsiz{ 9212 };
 	std::string _address;
+	std::streamsize _readcount{ 0 };
+	std::streamsize _filesize{ 0 };
 };
 

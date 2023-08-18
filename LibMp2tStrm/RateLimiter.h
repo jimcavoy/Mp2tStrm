@@ -34,6 +34,7 @@ public:
 
 private:
 	void poll();
+	bool inWindow(long clocktime, long pts);
 
 private:
 	QueueType& _inQueue;
