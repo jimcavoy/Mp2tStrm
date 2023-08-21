@@ -113,7 +113,10 @@ ThetaStream::Mp2tStreamer::Mp2tStreamer(const ThetaStream::CommandLineParser& ar
 
 ThetaStream::Mp2tStreamer::~Mp2tStreamer()
 {
-
+	delete _pimpl->_fileReader;
+	delete _pimpl->_decoder;
+	delete _pimpl->_limiter;
+	delete _pimpl->_sender;
 }
 
 void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& arguments)
@@ -172,29 +175,22 @@ void ThetaStream::Mp2tStreamer::stop()
 	if (_pimpl->_fileReader != nullptr)
 	{
 		_pimpl->_fileReader->stop();
-		delete _pimpl->_fileReader;
-		_pimpl->_fileReader = nullptr;
+		
 	}
 
 	if (_pimpl->_decoder != nullptr)
 	{
 		_pimpl->_decoder->stop();
-		delete _pimpl->_decoder;
-		_pimpl->_decoder = nullptr;
 	}
 
 	if (_pimpl->_limiter != nullptr)
 	{
 		_pimpl->_limiter->stop();
-		delete _pimpl->_limiter;
-		_pimpl->_limiter = nullptr;
 	}
 
 	if (_pimpl->_sender != nullptr)
 	{
 		_pimpl->_sender->stop();
-		delete _pimpl->_sender;
-		_pimpl->_sender = nullptr;
 	}
 }
 

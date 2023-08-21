@@ -156,11 +156,6 @@ void UdpSender::stop()
 #else
 	close(_pimpl->_socket);
 #endif
-	for (int i = 0; i < 10; i++)
-	{
-		DataType d;
-		const bool isFull = _pimpl->_queue.Get(std::move(d), 0);
-	}
 	_pimpl->_run = false;
 }
 
