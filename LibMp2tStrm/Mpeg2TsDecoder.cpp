@@ -6,11 +6,10 @@
 #include "tsadptfd.h"
 #include "tspes.h"
 #include "tspmt.h"
-#include "tsmetadata.h"
-#include "tsnit.h"
 
 #include <iostream>
 #include <sstream>
+#include <cassert>
 
 static auto t0 = std::chrono::steady_clock::now();
 
@@ -57,13 +56,10 @@ namespace
 
 using namespace std;
 
-Mpeg2TsDecoder::Mpeg2TsDecoder(Mpeg2TsDecoder::InQueueType& iqueue, Mpeg2TsDecoder::OutQueueType& oqueue, int rate)
+Mpeg2TsDecoder::Mpeg2TsDecoder(Mpeg2TsDecoder::InQueueType& iqueue, Mpeg2TsDecoder::OutQueueType& oqueue)
 	:_inQueue(iqueue)
 	, _outQueue(oqueue)
 	, _run(true)
-	, _pcr0(0.0)
-	, _rate(rate)
-	, _framecount(0)
 {
 
 }
@@ -104,8 +100,19 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 				case Pid2TypeMap::STREAM_TYPE::H265:
 				case Pid2TypeMap::STREAM_TYPE::HDMV:
 				{
-					//PrintTimestamp("Video", pes);
-					_framecount++;
+					//PrintTimestamp("Video", pes, _pcrClock);
+					if (_currentAU.size() > 0)
+					{
+						_outQueue.Put(std::move(_currentAU));
+					}
+
+					if (_currentAU.timestamp() == 0)
+					{
+						UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
+						UINT64 ts = pts_dts_flag == 0xC0 ? pes.dts() : pes.pts();
+						assert(ts != 0);
+						_currentAU.setTimestamp(ts);
+					}
 					break;
 				}
 				case Pid2TypeMap::STREAM_TYPE::AUDIO:
@@ -139,7 +146,7 @@ void Mpeg2TsDecoder::operator()()
 	//using namespace std;
 
 	// Print the header for the csv file
-	//cout << "Type,PTS,PTS(secs),DTS,DTS(secs),Wallclock,PCR" << endl;
+	// cout << "Type,PTS,PTS(secs),DTS,DTS(secs),Wallclock,PCR" << endl;
 
 	while (_run)
 	{
@@ -169,14 +176,17 @@ void Mpeg2TsDecoder::stop() noexcept
 
 uint64_t Mpeg2TsDecoder::count() noexcept
 {
-	uint64_t ret = _framecount;
-	_framecount = 0;
-	return ret;
+	return 0.0;
 }
 
 uint64_t Mpeg2TsDecoder::bytes() noexcept
 {
 	return uint64_t();
+}
+
+long Mpeg2TsDecoder::position() noexcept
+{
+	return 0;
 }
 
 void Mpeg2TsDecoder::address(char* addr, size_t len) noexcept
@@ -196,51 +206,11 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
 			BYTE pcr[6]{};
 			adf->getPCR(pcr);
 			_pcrClock.setTime(pcr);
-
-			if (_pcr0 == 0)
-			{
-				_t0 = std::chrono::steady_clock::now();
-				_pcr0 = _pcrClock.timeInSeconds();
-			}
-			else
-			{
-				double pcr1 = _pcrClock.timeInSeconds();
-				auto t1 = steady_clock::now();
-				duration<double> time_span = duration_cast<duration<double>>(t1 - _t0);
-				_t0 = t1;
-
-				int pcrInterval = (int)((pcr1 - _pcr0) * 1000) + _rate;
-				_pcr0 = pcr1;
-				int timedInterval = (int)(time_span.count() * 1000);
-
-				int interval = pcrInterval;
-				// Selection step.  Sometimes the PCR is lost so first 
-				// detect it than select the best value.
-				if (pcrInterval > (2 * timedInterval))
-				{
-					interval = timedInterval;
-#ifndef NDEBUG
-					cerr << "Missing PCR. Interval = " << interval << endl;
-#endif
-				}
-				else if (pcrInterval > timedInterval)
-				{
-					interval = timedInterval;
-				}
-#ifndef NDEBUG
-				cerr.precision(12);
-				cerr << pcr1 << " " << time_span.count() << " " << pcrInterval << " " << timedInterval << " " << endl;
-#endif
-				if (interval > 0)
-				{
-					std::this_thread::sleep_for(chrono::milliseconds(interval));
-				}
-			}
 		}
 	}
 }
 
 void Mpeg2TsDecoder::outputPacket(lcss::TransportPacket& pckt)
 {
-	_outQueue.Put(std::move(pckt));
+	_currentAU.add(std::move(pckt));
 }

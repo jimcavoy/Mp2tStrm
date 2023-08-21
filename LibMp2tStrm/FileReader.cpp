@@ -6,15 +6,16 @@
 #include <fcntl.h>
 #include <iostream>
 #include <string.h>
+#include <fstream>
 
 using namespace std;
 
-FileReader::FileReader(const char* filename, FileReader::QueueType& q, size_t bufsiz)
+FileReader::FileReader(const char* filename, FileReader::QueueType& q, std::streamsize filesize)
 	: _queue(q)
 	, _count(0)
 	, _bytes(0)
 	, _run(true)
-	, _bufsiz(bufsiz)
+	, _filesize(filesize)
 {
 	if (strcmp(filename, "-") == 0)
 	{
@@ -40,7 +41,6 @@ FileReader::FileReader(const char* filename, FileReader::QueueType& q, size_t bu
 		_ifile.reset(tsfile);
 	}
 
-	_buffer = std::vector<uint8_t>(_bufsiz);
 	_address = filename;
 }
 
@@ -66,6 +66,11 @@ uint64_t FileReader::bytes() noexcept
 	return ret;
 }
 
+long FileReader::position() noexcept
+{
+	return 0;
+}
+
 void FileReader::address(char* addr, size_t len) noexcept
 {
 #ifdef _WIN32
@@ -86,10 +91,18 @@ void FileReader::operator()()
 			_queue.Put(UdpData(_buffer.data(), len));
 			_count += len / 188;
 			_bytes += len;
+			_readcount += len;
 		}
 		else
 		{
-			stop();
+			if (_readcount >= _filesize)
+			{
+				stop();
+			}
+			else // sometimes we get a bad I/O read so reset the state
+			{
+				_ifile->clear();
+			}
 		}
 	}
 }

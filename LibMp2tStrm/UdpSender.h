@@ -1,8 +1,8 @@
 #pragma once
 
 #include "BoundedBuffer.h"
-#include "tspckt.h"
 #include "UdpData.h"
+#include "AccessUnit.h"
 
 #include <queue>
 #include <memory>
@@ -22,7 +22,7 @@ class UdpSender
 #endif
 {
 public:
-	typedef lcss::TransportPacket DataType;
+	typedef AccessUnit DataType;
 	typedef BoundedBuffer<DataType, QSIZE> QueueType;
 	typedef std::queue<UdpData> UdpQueueType;
 
@@ -39,6 +39,8 @@ public:
 	uint64_t bytes() noexcept;
 
 	void address(char* addr, size_t len) noexcept;
+
+	long position() noexcept;
 
 private:
 	class Impl;

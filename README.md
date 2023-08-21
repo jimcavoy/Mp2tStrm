@@ -8,4 +8,4 @@ a Wireshark capture file, this tool will allow users to replay a video
 stream from a MPEG-2 TS file.
 
 ## Dedependencies
-This project has an external dependency on [libmp2t library](https://github.com/jimcavoy/mp2tp).
+This project has an external dependency on [libmp2t library](https://github.com/jimcavoy/mp2tp) and [libh264p library](https://github.com/jimcavoy/h264p).

@@ -8,13 +8,11 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #else
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
-#include <errno.h>
 #endif
 
 #ifdef _WIN32
@@ -41,7 +39,7 @@ public:
 	{}
 
 public:
-	void addToQueue(const DataType& data);
+	void process(AccessUnit& data);
 	void poll();
 	void send(const UdpData& data);
 
@@ -170,16 +168,11 @@ void UdpSender::operator()()
 {
 	while (_pimpl->_run)
 	{
-		DataType d;
+		AccessUnit d;
 		const bool hasData = _pimpl->_queue.Get(std::move(d), 200);
 		if (hasData)
 		{
-			_pimpl->addToQueue(d);
-			_pimpl->poll();
-		}
-		else
-		{
-			stop();
+			_pimpl->process(d);
 		}
 	}
 }
@@ -229,14 +222,22 @@ void UdpSender::address(char* addr, size_t len) noexcept
 #endif
 }
 
-void UdpSender::Impl::addToQueue(const DataType& tsData)
+long UdpSender::position() noexcept
 {
+	return 0;
+}
 
-	if (_udpData.length() > BUFLEN)
+void UdpSender::Impl::process(AccessUnit& au)
+{
+	for (auto& ts : au)
 	{
-		_udpQueue.push(std::move(_udpData));
+		if (_udpData.length() > BUFLEN)
+		{
+			_udpQueue.push(std::move(_udpData));
+			poll();
+		}
+		_udpData.write(ts.data(), lcss::TransportPacket::TS_SIZE);
 	}
-	_udpData.write(tsData.data(), lcss::TransportPacket::TS_SIZE);
 }
 
 void UdpSender::Impl::poll()

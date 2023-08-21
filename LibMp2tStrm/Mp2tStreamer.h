@@ -3,6 +3,7 @@
 #include "CommandLineParser.h"
 
 #include <memory>
+#include <string>
 
 namespace ThetaStream
 {
@@ -15,6 +16,8 @@ namespace ThetaStream
 
 		void init(const ThetaStream::CommandLineParser& arguments);
 
+		void probe();
+
 		int run();
 
 		void stop();
@@ -24,6 +27,20 @@ namespace ThetaStream
 		uint64_t tsPacketsRead() const;
 
 		uint64_t udpPacketsSent() const;
+
+		double duration() const;
+
+		double averageBitrate() const;
+
+		std::string metadataCarriage() const;
+
+		int metadataFrequency() const;
+
+		double framesPerSecond() const;
+
+		int width() const;
+
+		int height() const;
 
 	private:
 		class Impl;

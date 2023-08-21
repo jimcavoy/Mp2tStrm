@@ -1,17 +1,14 @@
 #pragma once
 
-#include <chrono>
-#include <map>
 
 #include "tsprsr.h"
 #include "tspat.h"
 #include "tspmt.h"
 #include "tspckt.h"
 
-#include "BoundedBuffer.h"
+#include "AccessUnit.h"
 #include "PCRClock.h"
 #include "Pid2TypeMap.h"
-#include "UdpData.h"
 #include "FileReader.h"
 #include "UdpSender.h"
 
@@ -28,7 +25,7 @@ class Mpeg2TsDecoder : public lcss::TSParser
 	typedef UdpSender::QueueType OutQueueType;
 
 public:
-	Mpeg2TsDecoder(InQueueType& iqueue, OutQueueType& oqueue, int rate);
+	Mpeg2TsDecoder(InQueueType& iqueue, OutQueueType& oqueue);
 
 	void onPacket(lcss::TransportPacket& pckt) override;
 
@@ -39,6 +36,8 @@ public:
 	uint64_t count() noexcept;
 
 	uint64_t bytes() noexcept;
+
+	long position() noexcept;
 
 	void address(char* addr, size_t len) noexcept;
 
@@ -53,10 +52,7 @@ private:
 	InQueueType& _inQueue;
 	OutQueueType& _outQueue;
 	bool _run;
-	std::chrono::time_point<std::chrono::steady_clock> _t0;
-	double _pcr0;
-	int _rate;
-	int _framecount;
 	PCRClock _pcrClock;
+	AccessUnit _currentAU;
 };
 
