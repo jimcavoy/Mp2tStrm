@@ -52,7 +52,6 @@ private:
 	InQueueType& _inQueue;
 	OutQueueType& _outQueue;
 	bool _run;
-	int _rate;
 	PCRClock _pcrClock;
 	AccessUnit _currentAU;
 };

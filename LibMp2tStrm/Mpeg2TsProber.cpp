@@ -26,15 +26,15 @@ public:
 	std::string _filename;
 	lcss::ProgramAssociationTable _pat;
 	lcss::ProgramMapTable _pmt;
-	double _startPTS;
-	double _curPTS;
+	double _startPTS{};
+	double _curPTS{};
 	H264Prober _h264p;
 	Pid2TypeMap _pmtProxy;
-	int _metadataCarriage;
-	int _klvSetCount;
-	UINT64 _startKlvPTS;
-	UINT64 _prevKlvPTS;
-	UINT64 _systemTime;
+	int _metadataCarriage{};
+	int _klvSetCount{};
+	UINT64 _startKlvPTS{};
+	UINT64 _prevKlvPTS{};
+	UINT64 _systemTime{};
 	PCRClock _pcrClock;
 };
 
