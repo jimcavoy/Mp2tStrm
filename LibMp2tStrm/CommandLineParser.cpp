@@ -44,6 +44,7 @@ namespace ThetaStream
 			:destinationPort(other.destinationPort)
 			, ttl(other.ttl)
 			, sourceFile(other.sourceFile)
+			, destinationIP(other.destinationIP)
 			, ifaceAddr(other.ifaceAddr)
 		{
 
