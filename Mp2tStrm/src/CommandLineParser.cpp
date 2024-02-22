@@ -1,4 +1,4 @@
-#include <Mp2tStrm/Mp2tStrm/include/Mp2tStrm/CommandLineParser.h>
+#include <Mp2tStrm/CommandLineParser.h>
 
 #include <iostream>
 #include <string>

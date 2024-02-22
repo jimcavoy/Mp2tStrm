@@ -1,8 +1,9 @@
 // This file contains the 'main' function where program execution begins 
 // and ends there.
 
-#include "CommandLineParser.h"
-#include "Mp2tStreamer.h"
+
+#include <Mp2tStrm/CommandLineParser.h>
+#include <Mp2tStrm/Mp2tStreamer.h>
 
 #include <iostream>
 
