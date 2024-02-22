@@ -1,0 +1,37 @@
+# CMake generation dependency list for this directory.
+C:/Program Files (x86)/h264p/cmake/h264p-config-debug.cmake
+C:/Program Files (x86)/h264p/cmake/h264p-config-release.cmake
+C:/Program Files (x86)/h264p/cmake/h264p-config-version.cmake
+C:/Program Files (x86)/h264p/cmake/h264p-config.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/WriteBasicConfigVersionFile.cmake
+C:/Program Files/mp2tp/cmake/mp2tp-config-debug.cmake
+C:/Program Files/mp2tp/cmake/mp2tp-config-release.cmake
+C:/Program Files/mp2tp/cmake/mp2tp-config-version.cmake
+C:/Program Files/mp2tp/cmake/mp2tp-config.cmake
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/CMakeLists.txt
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/3.29.0-rc1/CMakeCCompiler.cmake
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/3.29.0-rc1/CMakeCXXCompiler.cmake
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/3.29.0-rc1/CMakeRCCompiler.cmake
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/3.29.0-rc1/CMakeSystem.cmake

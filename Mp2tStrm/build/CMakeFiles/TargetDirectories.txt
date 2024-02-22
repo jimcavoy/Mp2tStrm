@@ -1,0 +1,4 @@
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/Mp2tStrm.dir
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/INSTALL.dir
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/james/Documents/Work/Projects/LCSS/Src/Mp2tStrm/Mp2tStrm/Mp2tStrm/build/CMakeFiles/ZERO_CHECK.dir
