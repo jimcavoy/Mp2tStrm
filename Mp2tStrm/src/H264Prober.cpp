@@ -1,8 +1,8 @@
 #include "H264Prober.h"
 
-#include "nalu.h"
-#include "naluimpl.h"
-#include "loki/Visitor.h"
+#include <h264p/nalu.h>
+#include <h264p/naluimpl.h>
+#include <loki/Visitor.h>
 
 class H264Prober::Impl
 {

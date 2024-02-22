@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tsprsr.h"
+#include <mp2tp/tsprsr.h>
 #include "H264Prober.h"
 
 #include <memory>

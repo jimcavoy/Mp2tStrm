@@ -68,7 +68,7 @@ install (
 
 install (EXPORT Mp2tStrm_export
 	FILE Mp2tStrm-config.cmake
-	NAMESPACE ThetaStream::
+	NAMESPACE thetastream::
 	DESTINATION ${Mp2tStrm_INSTALL_CMAKEDIR}
 )
 

@@ -1,4 +1,4 @@
-#include "Mp2tStreamer.h"
+#include <Mp2tStrm/Mp2tStrm/include/Mp2tStrm/Mp2tStreamer.h>
 
 #include "FileReader.h"
 #include "Mpeg2TsDecoder.h"
@@ -8,7 +8,7 @@
 
 #ifdef PERFCNTR
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#include "Mp2tPerfCntr/Mp2tStrmCounter.h"
+#include <Mp2tPerfCntr/Mp2tStrmCounter.h>
 #endif
 
 #ifdef _WIN32

@@ -2,10 +2,10 @@
 
 #include "PCRClock.h"
 
-#include "tspckt.h"
-#include "tsadptfd.h"
-#include "tspes.h"
-#include "tspmt.h"
+#include <mp2tp/tspckt.h>
+#include <mp2tp/tsadptfd.h>
+#include <mp2tp/tspes.h>
+#include <mp2tp/tspmt.h>
 
 #include <iostream>
 #include <sstream>

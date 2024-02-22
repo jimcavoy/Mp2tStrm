@@ -14,6 +14,8 @@
 /Mp2tStrm/Mp2tStrm.dir
 /Mp2tStrm/Debug
 /Mp2tStrm/Release
+/Mp2tStrm/build/
+/build/
 *.vcxproj
 *.filters
 *.user

@@ -4,13 +4,14 @@
 #include "Pid2TypeMap.h"
 #include "H264Prober.h"
 
-#include "tspckt.h"
-#include "tsadptfd.h"
-#include "tspat.h"
-#include "tspes.h"
-#include "tspmt.h"
-#include "tsmetadata.h"
-#include "tsnit.h"
+
+#include <mp2tp/tspckt.h>
+#include <mp2tp/tsadptfd.h>
+#include <mp2tp/tspat.h>
+#include <mp2tp/tspes.h>
+#include <mp2tp/tspmt.h>
+#include <mp2tp/tsmetadata.h>
+#include <mp2tp/tsnit.h>
 
 #include <string>
 
@@ -140,7 +141,7 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
 	case Pid2TypeMap::STREAM_TYPE::H264:
 	case Pid2TypeMap::STREAM_TYPE::H265:
 	case Pid2TypeMap::STREAM_TYPE::HDMV:
-		_h264p.parse((char*)data, pckt.data_byte());
+		_h264p.parse(data, pckt.data_byte());
 		break;
 	}
 }
