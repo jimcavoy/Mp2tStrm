@@ -53,7 +53,7 @@ endif()
 
 target_include_directories(Mp2tStrm
 	PRIVATE src/Mp2tStrm
-	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/include>
+	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 install(TARGETS Mp2tStrm

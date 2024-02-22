@@ -10,16 +10,19 @@ project (Mp2tStrm
 )
 
 # Include sub-projects.
-add_subdirectory (Mp2tStrm)
+add_subdirectory (Mp2tStrmLib)
+
+find_package(mp2tp 1 CONFIG REQUIRED)
+find_package(h264p 1 CONFIG REQUIRED)
 
 add_executable(Mp2tStrmApp)
 
 target_sources(Mp2tStrmApp PRIVATE src/main.cpp)
 
 if(WIN32)
-    list(APPEND EXTRA_LIBS thetastream::Mp2tStrm wsock32 ws2_32)
+    list(APPEND EXTRA_LIBS Mp2tStrm wsock32 ws2_32)
 else()
-    list(APPEND EXTRA_LIBS thetastream::Mp2tStrm)
+    list(APPEND EXTRA_LIBS Mp2tStrm)
 endif()
 
 target_link_libraries(Mp2tStrmApp PRIVATE ${EXTRA_LIBS})

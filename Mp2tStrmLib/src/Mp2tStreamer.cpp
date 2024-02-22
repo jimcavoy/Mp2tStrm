@@ -1,4 +1,4 @@
-#include <Mp2tStrm/Mp2tStrm/include/Mp2tStrm/Mp2tStreamer.h>
+#include <Mp2tStrm/Mp2tStreamer.h>
 
 #include "FileReader.h"
 #include "Mpeg2TsDecoder.h"
