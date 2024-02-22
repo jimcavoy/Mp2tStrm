@@ -12,9 +12,6 @@ project (Mp2tStrm
 # Include sub-projects.
 add_subdirectory (Mp2tStrmLib)
 
-find_package(mp2tp 1 CONFIG REQUIRED)
-find_package(h264p 1 CONFIG REQUIRED)
-
 add_executable(Mp2tStrmApp)
 
 target_sources(Mp2tStrmApp PRIVATE src/main.cpp)

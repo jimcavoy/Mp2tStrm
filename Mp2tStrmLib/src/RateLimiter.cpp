@@ -84,7 +84,7 @@ void RateLimiter::poll()
 			au.timestamp() == 0 || 
 			au.timestamp() == _startPts)
 		{
-#ifndef NDEBUG
+#ifdef DEBUG
 			std::cout << auTime << ", " << clockTime << ", " << time_span.count() <<  std::endl;
 #endif
 			_position = auTime;
@@ -92,7 +92,7 @@ void RateLimiter::poll()
 			_queue.pop();
 			_framecount++;
 		}
-#ifndef NDEBUG
+#ifdef DEBUG
 		else
 		{
 			std::cout << auTime << ", " << clockTime << ", " << time_span.count() << " SKIPPED" << std::endl;
