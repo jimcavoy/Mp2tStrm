@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const char* usage = "Usage: Mp2tStrm -s<MPEG_transport_stream_file> -d<socket_addr>";
+const char* usage = "Usage: Mp2tStrmApp -s<MPEG_transport_stream_file> -d<socket_addr>";
 const char* opts = "  -s\tThe source MPEG-2 TS file path (default: -).\n \
  -d\tThe destination socket address (ip:port) (default: 127.0.0.1:50000).\n \
  -t\tTime to Live. (default: 16)\n \

@@ -76,7 +76,7 @@ namespace ThetaStream
 #ifdef _WIN32
 				sprintf_s(szErr, "Failed to open input file %s", _arguments.sourceFile());
 #else
-				sprintf(szErr, "Failed to open input file %s", filename);
+				sprintf(szErr, "Failed to open input file %s", _arguments.sourceFile());
 #endif
 				std::runtime_error exp(szErr);
 				throw exp;
