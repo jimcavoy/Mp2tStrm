@@ -9,6 +9,8 @@ project (Mp2tStrm
 	LANGUAGES C CXX
 )
 
+include(GNUInstallDirs)
+
 # Include sub-projects.
 add_subdirectory (Mp2tStrmLib)
 
@@ -23,6 +25,8 @@ else()
 endif()
 
 target_link_libraries(Mp2tStrmApp PRIVATE ${EXTRA_LIBS})
+
+install (TARGETS Mp2tStrmApp)
 
 # Test cases
 enable_testing()
