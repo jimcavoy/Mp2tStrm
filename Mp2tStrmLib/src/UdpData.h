@@ -2,10 +2,7 @@
 
 #include <vector>
 #include <cstddef>
-
-#ifndef _WIN32
-typedef unsigned char uint8_t;
-#endif
+#include <cstdint>
 
 class UdpData
 {
