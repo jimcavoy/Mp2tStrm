@@ -10,7 +10,12 @@ stream from a MPEG-2 TS file.
 ## How To Build
 This project has an external dependency on:
 
- - [mp2t library](https://github.com/jimcavoy/mp2tp) and;
- - [h264p library](https://github.com/jimcavoy/h264p).
+ - [loki library](https://github.com/snaewe/loki-lib.git) clone in the same directory where this project was cloned.
+ - [mp2t library](https://github.com/jimcavoy/mp2tp) build and install the library.
+ - [h264p library](https://github.com/jimcavoy/h264p) build and install the library.
 
-Build and install these projects before building the application.
+`Mp2tStrm` is a CMake project.  To configure and build the project use the following commands:
+
+ > cmake -S . -B ./build
+ > cmake --build ./build
+ > cmake --install ./build
