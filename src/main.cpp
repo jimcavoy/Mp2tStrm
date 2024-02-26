@@ -65,10 +65,8 @@ int main(int argc, char *argv[])
 
 		int ret = streamer.run();
 
-#ifndef PERFCNTR
 		cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
 		cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
-#endif
 
 		return ret;
 	}

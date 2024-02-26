@@ -12,7 +12,7 @@
 #include "UdpSender.h"
 
 #ifdef PERFCNTR
-#include "Mp2tPerfCntr/BaseIOInterface.h"
+#include <Mp2tPerfCntr/BaseIOInterface.h>
 #endif
 
 class Mpeg2TsDecoder : public lcss::TSParser

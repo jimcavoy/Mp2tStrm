@@ -6,7 +6,7 @@
 #include <array>
 
 #ifdef PERFCNTR
-#include "Mp2tPerfCntr/BaseIOInterface.h"
+#include <Mp2tPerfCntr/BaseIOInterface.h>
 #endif
 
 #ifndef QSIZE

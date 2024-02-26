@@ -13,9 +13,7 @@ set(Mp2tStrm_INSTALL_CMAKEDIR cmake CACHE PATH "Installation directory for confi
 
 # set the postfix "d" for the resulting .so or .dll files when building the
 # library in debug mode
-set(CMAKE_DEBUG_POSTFIX
-    d
-)
+set(CMAKE_DEBUG_POSTFIX d )
 
 find_package(mp2tp 1 CONFIG REQUIRED)
 find_package(h264p 1 CONFIG REQUIRED)
@@ -41,12 +39,8 @@ set(LOKI_DIRECTORY ../../loki-lib/include)
 
 include_directories(${LOKI_DIRECTORY})
 
-#if (CMAKE_VS_PLATFORM_NAME)
-#    include_directories(../../)
-#    add_compile_definitions(PERFCNTR)
-#    target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p wsock32 ws2_32)
-#elseif(WIN32)
 if (WIN32)
+    include_directories(../../)
     target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p wsock32 ws2_32)
 else()
     target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p pthread)
