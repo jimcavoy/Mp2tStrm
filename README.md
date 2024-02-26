@@ -16,6 +16,42 @@ This project has an external dependency on:
 
 `Mp2tStrm` is a CMake project.  To configure and build the project use the following commands:
 
- > cmake -S . -B ./build
- > cmake --build ./build
- > cmake --install ./build
+ - cmake -S . -B ./build
+ - cmake --build ./build
+ - cmake --install ./build
+
+## Usage
+Usage: Mp2tStrmApp.exe [-?] [-s|-] [-d127.0.0.1:50000] [-t[0..255]] [-iSTRING]
+
+Usage: Mp2tStrm.exe [OPTION...] 
+
+  `-s-`                           The source MPEG-2 TS file path (default: "-")
+  
+  `-d127.0.0.1:50000`             The destination socket address (ip:port) 
+                                (default: "127.0.0.1:50000")
+                                
+  `-t[0..255]`                    Time to Live. (default: 16)
+  
+  `-iSTRING`                      Specifies the network interface IP
+                                address for the destination stream. 
+
+Help options:
+
+  `-?`                            Show this help message
+
+### Examples
+
+1. Stream a file
+
+	> Mp2tStrmApp.exe -sC:\Samples\somefile.ts -d239.3.1.11:50000
+	
+2. Pipe a file into Mp2tStrm application to stream
+
+	> Mp2tStrmApp.exe -d239.3.1.11:50000 < C:\Samples\somefile.ts
+
+3. Pipe Motion Imagery stream from another application
+
+	> SampleApp.exe | Mp2tStrmApp.exe -d239.3.1.11:50000
+	
+SampleApp.exe is an application that streams Motion Imagery data out to 
+console and is piped into Mp2tStrmApp.exe.
