@@ -20,6 +20,13 @@ This project has an external dependency on:
  - cmake --build ./build
  - cmake --install ./build
 
+### To Test
+The project has a test case.  Run the following command:
+
+ - ctest --test-dir ./build
+
+The test case duration is about 13 seconds.  
+
 ## Usage
 Usage: Mp2tStrmApp.exe [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]
 
