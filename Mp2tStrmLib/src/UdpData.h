@@ -1,10 +1,8 @@
 #pragma once
 
 #include <vector>
-
-#ifndef _WIN32
-typedef unsigned char uint8_t;
-#endif
+#include <cstddef>
+#include <cstdint>
 
 class UdpData
 {

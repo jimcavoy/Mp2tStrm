@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "tspmt.h"
+#include <mp2tp/tspmt.h>
 
 /// <summary>
 /// Represents a Program Map Table that maps PID to 

@@ -7,6 +7,11 @@ RateLimiter::RateLimiter(QueueType& in, QueueType& out, double fps)
 	, _outQueue(out)
 	, _framePerSeconds(fps)
 {
+	if (_framePerSeconds == 0.0)
+	{
+		std::runtime_error exp("ERROR: Frames per seconds is zero.  Set -f parameter.\n");
+		throw exp;
+	}
 	_window = (long) (90'000 / _framePerSeconds);
 }
 
@@ -84,7 +89,7 @@ void RateLimiter::poll()
 			au.timestamp() == 0 || 
 			au.timestamp() == _startPts)
 		{
-#ifndef NDEBUG
+#ifdef DEBUG
 			std::cout << auTime << ", " << clockTime << ", " << time_span.count() <<  std::endl;
 #endif
 			_position = auTime;
@@ -92,7 +97,7 @@ void RateLimiter::poll()
 			_queue.pop();
 			_framecount++;
 		}
-#ifndef NDEBUG
+#ifdef DEBUG
 		else
 		{
 			std::cout << auTime << ", " << clockTime << ", " << time_span.count() << " SKIPPED" << std::endl;

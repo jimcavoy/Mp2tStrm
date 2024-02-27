@@ -1,6 +1,6 @@
 #pragma once
 
-#include "h264prsr.h"
+#include <h264p/h264prsr.h>
 
 #include <memory>
 #include <string>

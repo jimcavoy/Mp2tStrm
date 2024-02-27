@@ -1,8 +1,8 @@
 #include "H264Prober.h"
 
-#include "nalu.h"
-#include "naluimpl.h"
-#include "loki/Visitor.h"
+#include <h264p/nalu.h>
+#include <h264p/naluimpl.h>
+#include <loki/Visitor.h>
 
 class H264Prober::Impl
 {
@@ -52,10 +52,8 @@ public:
 		case 100: parser_.profile = "high";     break;
 		}
 
-		char buf[255];
-		_itoa_s(unit.level_idc, buf, 10);
-		char lvl[8];
-		memset(lvl, 0, 8);
+		std::string buf = std::to_string(unit.level_idc);
+		char lvl[8]{};
 		lvl[0] = buf[0];
 		lvl[1] = '.';
 		lvl[2] = buf[1];

@@ -1,16 +1,19 @@
-#include "CommandLineParser.h"
+#include <Mp2tStrm/CommandLineParser.h>
 
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <cstring>
 
 using namespace std;
 
-const char* usage = "Usage: Mp2tStrm -s<MPEG_transport_stream_file> -d<socket_addr>";
+const char* usage = "\nUsage: Mp2tStrmApp.exe [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]";
 const char* opts = "  -s\tThe source MPEG-2 TS file path (default: -).\n \
  -d\tThe destination socket address (ip:port) (default: 127.0.0.1:50000).\n \
  -t\tTime to Live. (default: 16)\n \
  -i\tSpecifies the network interface IP address for the destination stream.\n \
+ -f\tFrames per second. (default: 0)\n \
+ -p\tProbe the input stream and exit.\n \
  -?\tPrint this message.";
 
 namespace
@@ -46,6 +49,8 @@ namespace ThetaStream
 			, sourceFile(other.sourceFile)
 			, destinationIP(other.destinationIP)
 			, ifaceAddr(other.ifaceAddr)
+			, framesPerSecond(other.framesPerSecond)
+			, probe(other.probe)
 		{
 
 		}
@@ -57,6 +62,8 @@ namespace ThetaStream
 		std::string sourceFile{ "-" };
 		std::string destinationIP{ "127.0.0.1" };
 		std::string ifaceAddr;
+		double framesPerSecond{};
+		bool probe{ false };
 	};
 }
 
@@ -110,16 +117,76 @@ void ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
 		switch (c)
 		{
 		case 's':
-			_pimpl->sourceFile = *argv + 1;
+		{
+			if (strlen(*argv + 1) == 0)
+			{
+				_pimpl->sourceFile = *++argv;
+				--argc;
+			}
+			else
+			{
+				_pimpl->sourceFile = *argv + 1;
+			}
 			break;
+		}
 		case 'd':
-			dest = *argv + 1;
+		{
+			if (strlen(*argv + 1) == 0)
+			{
+				dest = *++argv;
+				--argc;
+			}
+			else
+			{
+				dest = *argv + 1;
+			}
 			break;
+		}
 		case 'i':
-			_pimpl->ifaceAddr = *argv + 1;
+		{
+			if (strlen(*argv + 1) == 0)
+			{
+				_pimpl->ifaceAddr = *++argv;
+				--argc;
+			}
+			else
+			{
+				_pimpl->ifaceAddr = *argv + 1;
+			}
 			break;
+		}
 		case 't':
-			_pimpl->ttl = std::stoi(*argv + 1);
+		{
+			std::string ttl;
+			if (strlen(*argv + 1) == 0)
+			{
+				ttl = *++argv;
+				--argc;
+			}
+			else
+			{
+				ttl = *argv + 1;
+			}
+			_pimpl->ttl = std::stoi(ttl);
+			break;
+		}
+		case 'f':
+		{
+			std::string fps;
+			if (strlen(*argv + 1) == 0)
+			{
+				fps = *++argv;
+				--argc;
+			}
+			else
+			{
+				fps = *argv + 1;
+			}
+			_pimpl->framesPerSecond = std::stod(fps);
+			break;
+		}
+		case 'p':
+			_pimpl->probe = true;
 			break;
 		case '?':
 		{
@@ -133,7 +200,10 @@ void ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
 		default:
 		{
 			std::stringstream msg;
-			msg << appname << ": illegal option " << c << endl;
+			msg << endl << "ERROR: illegal option " << c << endl;
+			msg << usage << endl;
+			msg << endl << "Options: " << endl;
+			msg << opts << endl;
 			std::runtime_error exp(msg.str().c_str());
 			throw exp;
 		}
@@ -167,4 +237,14 @@ int ThetaStream::CommandLineParser::destinationPort() const
 int ThetaStream::CommandLineParser::ttl() const
 {
 	return _pimpl->ttl;
+}
+
+double ThetaStream::CommandLineParser::framesPerSecond() const
+{
+	return _pimpl->framesPerSecond;
+}
+
+bool ThetaStream::CommandLineParser::probe() const
+{
+	return _pimpl->probe;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tspckt.h"
+#include <mp2tp/tspckt.h>
 #include <vector>
 
 class AccessUnit

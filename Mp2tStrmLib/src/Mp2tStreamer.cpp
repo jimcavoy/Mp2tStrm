@@ -1,4 +1,4 @@
-#include "Mp2tStreamer.h"
+#include <Mp2tStrm/Mp2tStreamer.h>
 
 #include "FileReader.h"
 #include "Mpeg2TsDecoder.h"
@@ -8,7 +8,7 @@
 
 #ifdef PERFCNTR
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#include "Mp2tPerfCntr/Mp2tStrmCounter.h"
+#include <Mp2tPerfCntr/Mp2tStrmCounter.h>
 #endif
 
 #ifdef _WIN32
@@ -73,11 +73,7 @@ namespace ThetaStream
 			if (!tsfile->is_open())
 			{
 				char szErr[512]{};
-#ifdef _WIN32
-				sprintf_s(szErr, "Failed to open input file %s", _arguments.sourceFile());
-#else
-				sprintf(szErr, "Failed to open input file %s", filename);
-#endif
+				sprintf(szErr, "Failed to open input file %s", _arguments.sourceFile());
 				std::runtime_error exp(szErr);
 				throw exp;
 			}
@@ -164,8 +160,8 @@ int ThetaStream::Mp2tStreamer::run()
 	perfCounter.stop();
 	perfCounterThread.join();
 #else
-	_pimpl->_tsRead = freader.count();
-	_pimpl->_udpSent = sender.count();
+	_pimpl->_tsRead = _pimpl->_fileReader->count();
+	_pimpl->_udpSent = _pimpl->_sender->count();
 #endif
 	return 0;
 }
@@ -231,7 +227,7 @@ int ThetaStream::Mp2tStreamer::metadataFrequency() const
 
 double ThetaStream::Mp2tStreamer::framesPerSecond() const
 {
-	return _pimpl->_prober.h264Prober().framesPerSecond();
+	return _pimpl->_prober.h264Prober().framesPerSecond() > 0.0 ? _pimpl->_prober.h264Prober().framesPerSecond() : _pimpl->_arguments.framesPerSecond();
 }
 
 int ThetaStream::Mp2tStreamer::width() const

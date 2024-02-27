@@ -1,10 +1,9 @@
 #pragma once
 
-
-#include "tsprsr.h"
-#include "tspat.h"
-#include "tspmt.h"
-#include "tspckt.h"
+#include <mp2tp/tsprsr.h>
+#include <mp2tp/tspat.h>
+#include <mp2tp/tspmt.h>
+#include <mp2tp/tspckt.h>
 
 #include "AccessUnit.h"
 #include "PCRClock.h"
@@ -13,7 +12,7 @@
 #include "UdpSender.h"
 
 #ifdef PERFCNTR
-#include "Mp2tPerfCntr/BaseIOInterface.h"
+#include <Mp2tPerfCntr/BaseIOInterface.h>
 #endif
 
 class Mpeg2TsDecoder : public lcss::TSParser
