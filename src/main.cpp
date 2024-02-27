@@ -6,6 +6,7 @@
 #include <Mp2tStrm/Mp2tStreamer.h>
 
 #include <iostream>
+#include <cstring>
 
 ThetaStream::Mp2tStreamer* pMp2tStreamer;
 
@@ -34,7 +35,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 void banner()
 {
 	std::cerr << "Mp2tStrmApp: MPEG-2 TS Streamer Application v1.0.0" << std::endl;
-	std::cerr << "Copyright (c) 2024 ThetaStream Consulting" << std::endl;
+	std::cerr << "Copyright (c) 2024 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
 
