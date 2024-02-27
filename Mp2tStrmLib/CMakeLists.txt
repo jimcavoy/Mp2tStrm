@@ -51,39 +51,40 @@ target_include_directories(Mp2tStrm
 	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-install(TARGETS Mp2tStrm
-	EXPORT Mp2tStrm_export
-	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+# Comment out install commands for now.
+#install(TARGETS Mp2tStrm
+#	EXPORT Mp2tStrm_export
+#	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#)
 
-install (
-	DIRECTORY ${PROJECT_SOURCE_DIR}/include/
-	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
+#install (
+#	DIRECTORY ${PROJECT_SOURCE_DIR}/include/
+#	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+#)
 
-install (EXPORT Mp2tStrm_export
-	FILE Mp2tStrm-config.cmake
-	NAMESPACE thetastream::
-	DESTINATION ${Mp2tStrm_INSTALL_CMAKEDIR}
-)
+#install (EXPORT Mp2tStrm_export
+#	FILE Mp2tStrm-config.cmake
+#	NAMESPACE thetastream::
+#	DESTINATION ${Mp2tStrm_INSTALL_CMAKEDIR}
+#)
 
 # Defines write_basic_package_version_file
-include(CMakePackageConfigHelpers)
+#include(CMakePackageConfigHelpers)
 
 # Create a package version file for the package. This will allow consumers to specify
 # version argument to select between several versions of the package via specifying VERSION argument
 # to find_package().
 # We're not explicitly specifying the VERSION parameter to allow `write_basic_package_version_file` to 
 # get it from project(...) version (which is 1.0.0)
-write_basic_package_version_file(
-  "Mp2tStrm-config-version.cmake"
+#write_basic_package_version_file(
+#  "Mp2tStrm-config-version.cmake"
   # Package compatibility strategy. SameMajorVersion is essentially `semantic versioning`.
-  COMPATIBILITY SameMajorVersion
-)
+#  COMPATIBILITY SameMajorVersion
+#)
 
 # Install command for deploying Config-file package files into the target system. It must be present
 # in the same directory as `Mp2tStrm-config.cmake` file.
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/Mp2tStrm-config-version.cmake"
-  DESTINATION "${Mp2tStrm_INSTALL_CMAKEDIR}"
-)
+#install(FILES
+#  "${CMAKE_CURRENT_BINARY_DIR}/Mp2tStrm-config-version.cmake"
+#  DESTINATION "${Mp2tStrm_INSTALL_CMAKEDIR}"
+#)
