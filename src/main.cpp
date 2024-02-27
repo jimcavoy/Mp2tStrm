@@ -31,6 +31,12 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 }
 #endif
 
+void banner()
+{
+	std::cerr << "Mp2tStrmApp: MPEG-2 TS Streamer Application v1.0.0" << std::endl;
+	std::cerr << "Copyright (c) 2024 ThetaStream Consulting" << std::endl;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -38,8 +44,11 @@ int main(int argc, char *argv[])
 
 	try
 	{
+		banner();
+
 		ThetaStream::CommandLineParser cmdline;
-		cmdline.parse(argc, argv, "Mp2tStrm.exe");
+		cmdline.parse(argc, argv, "Mp2tStrmApp.exe");
+		int ret = 0;
 
 		std::cerr << std::endl << "Enter Ctrl-C to exit" << std::endl << std::endl;
 #ifdef _WIN32
@@ -53,20 +62,26 @@ int main(int argc, char *argv[])
 		ThetaStream::Mp2tStreamer streamer(cmdline);
 		pMp2tStreamer = &streamer;
 
-		streamer.probe();
+		if ((cmdline.probe() || strcmp(cmdline.sourceFile(), "-") != 0) && cmdline.framesPerSecond() == 0)
+		{
+			std::cerr << "Probing input MPEG-2 TS stream..." << std::endl << std::endl;
+			streamer.probe();
 
-		std::cout << "Duration: " << streamer.duration() << std::endl;
-		std::cout << "Average Bitrate: " << streamer.averageBitrate() << std::endl;
-		std::cout << "Metadata Carriage: " << streamer.metadataCarriage() << std::endl;
-		std::cout << "Metadata Frequency: " << streamer.metadataFrequency() << std::endl;
+			std::cout << "Duration: " << streamer.duration() << std::endl;
+			std::cout << "Average Bitrate: " << streamer.averageBitrate() << std::endl;
+			std::cout << "Metadata Carriage: " << streamer.metadataCarriage() << std::endl;
+			std::cout << "Metadata Frequency: " << streamer.metadataFrequency() << std::endl;
+			std::cout << "Frame/Seconds: " << streamer.framesPerSecond() << std::endl;
+			std::cout << "Resolution: " << streamer.width() << "x" << streamer.height() << std::endl << std::endl;
+		}
 
-		std::cout << "Frame/Seconds: " << streamer.framesPerSecond() << std::endl;
-		std::cout << "Resolution: " << streamer.width() << "x" << streamer.height() << std::endl << std::endl;
-
-		int ret = streamer.run();
-
-		cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
-		cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
+		if (!cmdline.probe())
+		{
+			std::cerr << "Streaming file..." << std::endl << std::endl;
+			ret = streamer.run();
+			cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
+			cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
+		}
 
 		return ret;
 	}

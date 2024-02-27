@@ -73,11 +73,7 @@ namespace ThetaStream
 			if (!tsfile->is_open())
 			{
 				char szErr[512]{};
-#ifdef _WIN32
-				sprintf_s(szErr, "Failed to open input file %s", _arguments.sourceFile());
-#else
 				sprintf(szErr, "Failed to open input file %s", _arguments.sourceFile());
-#endif
 				std::runtime_error exp(szErr);
 				throw exp;
 			}
@@ -231,7 +227,7 @@ int ThetaStream::Mp2tStreamer::metadataFrequency() const
 
 double ThetaStream::Mp2tStreamer::framesPerSecond() const
 {
-	return _pimpl->_prober.h264Prober().framesPerSecond();
+	return _pimpl->_prober.h264Prober().framesPerSecond() > 0.0 ? _pimpl->_prober.h264Prober().framesPerSecond() : _pimpl->_arguments.framesPerSecond();
 }
 
 int ThetaStream::Mp2tStreamer::width() const

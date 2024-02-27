@@ -21,19 +21,21 @@ This project has an external dependency on:
  - cmake --install ./build
 
 ## Usage
-Usage: Mp2tStrmApp.exe [-?] [-s|-] [-d127.0.0.1:50000] [-t[0..255]] [-iSTRING]
+Usage: Mp2tStrmApp.exe [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]
 
-Usage: Mp2tStrm.exe [OPTION...] 
+Options:
 
   `-s-`                           The source MPEG-2 TS file path (default: "-")
-  
-  `-d127.0.0.1:50000`             The destination socket address (ip:port) 
-                                (default: "127.0.0.1:50000")
-                                
-  `-t[0..255]`                    Time to Live. (default: 16)
-  
-  `-iSTRING`                      Specifies the network interface IP
-                                address for the destination stream. 
+
+  `-d 127.0.0.1:50000`             The destination socket address (ip:port) (default: "127.0.0.1:50000")
+
+  `-t [0..255]`                    Time to Live. (default: 16)
+
+  `-i STRING`                      Specifies the network interface IP address for the destination stream. 
+
+  `-f DOUBLE`                    Frames per second. (default: 0)
+
+  `-p`                          Probe the input stream and exit.
 
 Help options:
 
@@ -43,15 +45,19 @@ Help options:
 
 1. Stream a file
 
-	> Mp2tStrmApp.exe -sC:\Samples\somefile.ts -d239.3.1.11:50000
+	> Mp2tStrmApp.exe -s C:\Samples\somefile.ts -d 239.3.1.11:50000
 	
-2. Pipe a file into Mp2tStrm application to stream
+2. Pipe a file into Mp2tStrm application to stream.  Ensure the `-f` parameter is set greater than 0.
 
-	> Mp2tStrmApp.exe -d239.3.1.11:50000 < C:\Samples\somefile.ts
+	> Mp2tStrmApp.exe -d 239.3.1.11:50000 -f 29.97 < C:\Samples\somefile.ts
 
-3. Pipe Motion Imagery stream from another application
+3. Pipe Motion Imagery stream from another application.  Ensure the `-f` parameter is set greater than 0.
 
-	> SampleApp.exe | Mp2tStrmApp.exe -d239.3.1.11:50000
-	
+	> SampleApp.exe | Mp2tStrmApp.exe -d239.3.1.11:50000 -f 30
+
 SampleApp.exe is an application that streams Motion Imagery data out to 
 console and is piped into Mp2tStrmApp.exe.
+
+4. Probe a file and exit
+
+	> Mp2tStrmApp.exe -s C:\Samples\somefile.ts -p

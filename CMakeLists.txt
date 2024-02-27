@@ -31,7 +31,7 @@ install (TARGETS Mp2tStrmApp)
 # Test cases
 enable_testing()
 
-set(args -s${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts -d239.3.1.11:50000)
+set(args -s ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts -d 239.3.1.11:50000 -t 255)
 
 add_test(NAME Stream
 	COMMAND Mp2tStrmApp ${args})

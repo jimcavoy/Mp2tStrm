@@ -124,7 +124,7 @@ UdpSender::UdpSender(const char* ipaddr, uint32_t port, UdpSender::QueueType& q,
 	{
 #ifdef _WIN32
 		WSACleanup();
-		sprintf_s(szErr, "Error when calling inet_pton: %d", WSAGetLastError());
+		sprintf(szErr, "Error when calling inet_pton: %d", WSAGetLastError());
 #else
 		sprintf(szErr, "Error when calling inet_pton: %d", errno);
 #endif

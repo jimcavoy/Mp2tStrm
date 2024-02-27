@@ -7,6 +7,11 @@ RateLimiter::RateLimiter(QueueType& in, QueueType& out, double fps)
 	, _outQueue(out)
 	, _framePerSeconds(fps)
 {
+	if (_framePerSeconds == 0.0)
+	{
+		std::runtime_error exp("ERROR: Frames per seconds is zero.  Set -f parameter.\n");
+		throw exp;
+	}
 	_window = (long) (90'000 / _framePerSeconds);
 }
 
