@@ -3,13 +3,24 @@ cmake_minimum_required (VERSION 3.21)
 project(Mp2tStrm
     VERSION 1.0.1
     DESCRIPTION "MPEG-2 TS Streamer Library"
-    LANGUAGES C CXX)
-	
-include(GNUInstallDirs)
+    LANGUAGES C CXX
+)
 
-# This is the default install directory for config-file package cmake files
-# It is relative to install prefix.
-set(Mp2tStrm_INSTALL_CMAKEDIR cmake CACHE PATH "Installation directory for config-file package cmake files")
+# include the module `ExternalProject`
+include(ExternalProject)
+
+# Add an external project from a downloaded source archive
+ExternalProject_Add(loki-lib
+  URL https://github.com/snaewe/loki-lib/archive/refs/tags/Release_0_1_5.tar.gz
+  URL_HASH MD5=74e60c683f745dc15c6e772927349483
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  INSTALL_COMMAND ""
+)
+
+ExternalProject_Get_Property(loki-lib SOURCE_DIR)
+
+set(LOKI_DIR "${SOURCE_DIR}")
 
 # set the postfix "d" for the resulting .so or .dll files when building the
 # library in debug mode
@@ -20,24 +31,44 @@ find_package(h264p 1 CONFIG REQUIRED)
 
 add_library(Mp2tStrm STATIC)
 
-file(GLOB SRC_LIST
-    src/*.cpp)
-
-target_sources(Mp2tStrm PRIVATE ${SRC_LIST})
+target_sources(Mp2tStrm 
+  PRIVATE
+    include/Mp2tStrm/CommandLineParser.h
+    include/Mp2tStrm/Mp2tStreamer.h
+    src/AccessUnit.cpp
+    src/AccessUnit.h
+    src/BoundedBuffer.h
+    src/CommandLineParser.cpp
+    src/FileReader.cpp
+    src/FileReader.h
+    src/H264Prober.cpp
+    src/H264Prober.h
+    src/LockFreeQueue.h
+    src/Mp2tStreamer.cpp
+    src/Mpeg2TsDecoder.cpp
+    src/Mpeg2TsDecoder.h
+    src/Mpeg2TsProber.cpp
+    src/Mpeg2TsProber.h
+    src/PCRClock.cpp
+    src/PCRClock.h
+    src/Pid2TypeMap.cpp
+    src/Pid2TypeMap.h
+    src/RateLimiter.cpp
+    src/RateLimiter.h
+    src/UdpData.cpp
+    src/UdpData.h
+    src/UdpSender.cpp
+    src/UdpSender.h
+)
 
 set_property(TARGET Mp2tStrm PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 add_compile_definitions(QSIZE=100)
 
 # specify the C++ standard
-target_compile_features(
-    Mp2tStrm
-    PUBLIC cxx_std_14
-)
+target_compile_features(Mp2tStrm PUBLIC cxx_std_14)
 
-set(LOKI_DIRECTORY ../../loki-lib/include)
-
-include_directories(${LOKI_DIRECTORY})
+add_dependencies(Mp2tStrm loki-lib)
 
 if (WIN32)
     include_directories(../../)
@@ -47,8 +78,11 @@ else()
 endif()
 
 target_include_directories(Mp2tStrm
-	PRIVATE src/Mp2tStrm
-	PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE 
+    src/Mp2tStrm
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${LOKI_DIR}/include>
 )
 
 # Comment out install commands for now.
