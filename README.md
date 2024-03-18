@@ -17,19 +17,23 @@ This project has an external dependency on:
 
     cmake -S . -B ./build
 
+<p></p>
+
     cmake --build ./build
+    
+<p></p>
 
     cmake --install ./build
 
 ### To Test
 The project has a test case.  Run the following command:
 
- - ctest --test-dir ./build
+    ctest --test-dir ./build
 
 The test case duration is about 13 seconds.
 
 ## Usage
-Usage: Mp2tStreamer.exe [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]
+Usage: __Mp2tStreamer__ [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]
 
 Options:
 
@@ -51,21 +55,21 @@ Help options:
 
 ### Examples
 
-1. Stream a file
+__Stream a file.__
 
     Mp2tStreamer.exe -s C:\Samples\somefile.ts -d 239.3.1.11:50000
 
-2. Pipe a file into Mp2tStrm application to stream.  Ensure the `-f` parameter is set greater than 0.
+__Pipe a file into Mp2tStrm application to stream.  Ensure the `-f` parameter is set greater than 0.__
 
     Mp2tStreamer.exe -d 239.3.1.11:50000 -f 29.97 < C:\Samples\somefile.ts
 
-3. Pipe Motion Imagery stream from another application.  Ensure the `-f` parameter is set greater than 0.
+__Pipe Motion Imagery stream from another application.  Ensure the `-f` parameter is set greater than 0.__
 
     SampleApp.exe | Mp2tStreamer.exe -d239.3.1.11:50000 -f 30
 
 SampleApp.exe is an application that streams Motion Imagery data out to 
 console and is piped into Mp2tStreamer.exe.
 
-4. Probe a file and exit
+__Probe a file and exit.__
 
     Mp2tStreamer.exe -s C:\Samples\somefile.ts -p
