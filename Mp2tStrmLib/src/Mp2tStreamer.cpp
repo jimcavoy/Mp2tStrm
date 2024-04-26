@@ -159,10 +159,9 @@ int ThetaStream::Mp2tStreamer::run()
 #ifdef PERFCNTR
 	perfCounter.stop();
 	perfCounterThread.join();
-#else
+#endif
 	_pimpl->_tsRead = _pimpl->_fileReader->count();
 	_pimpl->_udpSent = _pimpl->_sender->count();
-#endif
 	return 0;
 }
 

@@ -34,7 +34,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 
 void banner()
 {
-	std::cerr << "Mp2tStrmApp: MPEG-2 TS Streamer Application v1.0.0" << std::endl;
+	std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.0.0" << std::endl;
 	std::cerr << "Copyright (c) 2024 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 		banner();
 
 		ThetaStream::CommandLineParser cmdline;
-		cmdline.parse(argc, argv, "Mp2tStrmApp.exe");
+		cmdline.parse(argc, argv, "Mp2tStreamer.exe");
 		int ret = 0;
 
 		std::cerr << std::endl << "Enter Ctrl-C to exit" << std::endl << std::endl;
