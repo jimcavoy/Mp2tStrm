@@ -18,6 +18,7 @@ public:
 	double averageBitrate() const;
 	std::string metadataCarriage() const;
 	int metadataFrequency() const;
+	double framesPerSecond() const;
 
 	const H264Prober& h264Prober() const;
 
