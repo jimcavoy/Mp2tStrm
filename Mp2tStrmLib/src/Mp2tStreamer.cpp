@@ -159,10 +159,9 @@ int ThetaStream::Mp2tStreamer::run()
 #ifdef PERFCNTR
 	perfCounter.stop();
 	perfCounterThread.join();
-#else
+#endif
 	_pimpl->_tsRead = _pimpl->_fileReader->count();
 	_pimpl->_udpSent = _pimpl->_sender->count();
-#endif
 	return 0;
 }
 
@@ -227,7 +226,11 @@ int ThetaStream::Mp2tStreamer::metadataFrequency() const
 
 double ThetaStream::Mp2tStreamer::framesPerSecond() const
 {
-	return _pimpl->_prober.h264Prober().framesPerSecond() > 0.0 ? _pimpl->_prober.h264Prober().framesPerSecond() : _pimpl->_arguments.framesPerSecond();
+	// Frame rate pass in as a command line parameter overrides the video frame rate.
+	if (_pimpl->_arguments.framesPerSecond() > 0)
+		return _pimpl->_arguments.framesPerSecond();
+
+	return _pimpl->_prober.framesPerSecond();
 }
 
 int ThetaStream::Mp2tStreamer::width() const

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const char* usage = "\nUsage: Mp2tStrmApp.exe [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]";
+const char* usage = "\nUsage: Mp2tStreamer.exe [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]";
 const char* opts = "  -s\tThe source MPEG-2 TS file path (default: -).\n \
  -d\tThe destination socket address (ip:port) (default: 127.0.0.1:50000).\n \
  -t\tTime to Live. (default: 16)\n \

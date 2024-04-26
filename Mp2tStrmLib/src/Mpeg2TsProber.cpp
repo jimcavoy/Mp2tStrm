@@ -33,6 +33,7 @@ public:
 	Pid2TypeMap _pmtProxy;
 	int _metadataCarriage{};
 	int _klvSetCount{};
+	int _frameCount{};
 	UINT64 _startKlvPTS{};
 	UINT64 _prevKlvPTS{};
 	UINT64 _systemTime{};
@@ -73,6 +74,7 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
 			{
 				switch (_pmtProxy.packetType(pckt.PID()))
 				{
+				case Pid2TypeMap::STREAM_TYPE::VIDEO:
 				case Pid2TypeMap::STREAM_TYPE::H264:
 				case Pid2TypeMap::STREAM_TYPE::H265:
 				case Pid2TypeMap::STREAM_TYPE::HDMV:
@@ -82,6 +84,11 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
 					double curpts = pes.ptsInSeconds();
 					if (curpts > 0.0 && curpts > _startPTS && curpts > _curPTS)
 						_curPTS = curpts;
+
+					if (_curPTS - _startPTS < 1.0)
+					{
+						_frameCount++;
+					}
 				}
 				break;
 				case Pid2TypeMap::STREAM_TYPE::KLVA:
@@ -202,6 +209,13 @@ std::string Mpeg2TsProber::metadataCarriage() const
 int Mpeg2TsProber::metadataFrequency() const
 {
 	return _pimpl->_klvSetCount;
+}
+
+double Mpeg2TsProber::framesPerSecond() const
+{
+	double fps = _pimpl->_h264p.framesPerSecond();
+
+	return fps > 0 ? fps : (double) _pimpl->_frameCount;
 }
 
 const H264Prober& Mpeg2TsProber::h264Prober() const
