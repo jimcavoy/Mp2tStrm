@@ -109,9 +109,12 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 					if (_currentAU.timestamp() == 0)
 					{
 						UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
-						UINT64 ts = pts_dts_flag == 0xC0 ? pes.dts() : pes.pts();
-						assert(ts != 0);
-						_currentAU.setTimestamp(ts);
+						if (pts_dts_flag > 0x00)
+						{
+							UINT64 ts = pts_dts_flag == 0xC0 ? pes.dts() : pes.pts();
+							assert(ts != 0);
+							_currentAU.setTimestamp(ts);
+						}
 					}
 					break;
 				}
