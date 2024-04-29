@@ -1,6 +1,7 @@
 #include "RateLimiter.h"
 
 #include <iostream>
+#include <thread>
 
 RateLimiter::RateLimiter(QueueType& in, QueueType& out, double fps)
 	:_inQueue(in)
@@ -83,26 +84,31 @@ void RateLimiter::poll()
 		auto timeNow = std::chrono::steady_clock::now();
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(timeNow - _startTime);
 		long clockTime = time_span.count() * 90'000;
-		long auTime = (long) au.timestamp() - _startPts;
+		long runTime = (long) au.timestamp() - _startPts;
 
-		if (inWindow(clockTime, auTime) || 
+		if (inWindow(clockTime, runTime) || 
 			au.timestamp() == 0 || 
 			au.timestamp() == _startPts)
 		{
+			if (runTime > 0.0)
+			{
 #ifdef DEBUG
-			std::cout << auTime << ", " << clockTime << ", " << time_span.count() <<  std::endl;
+				std::cout << runTime << ", " << clockTime << ", " << time_span.count() << std::endl;
 #endif
-			_position = auTime;
+				_position = runTime;
+				_framecount++;
+			}
 			_outQueue.Put(std::move(au));
 			_queue.pop();
-			_framecount++;
 		}
-#ifdef DEBUG
 		else
 		{
-			std::cout << auTime << ", " << clockTime << ", " << time_span.count() << " SKIPPED" << std::endl;
-		}
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+#ifdef DEBUG
+			std::cout << runTime << ", " << clockTime << ", " << time_span.count() << " SKIPPED" << std::endl;
 #endif
+		}
+
 	}
 }
 

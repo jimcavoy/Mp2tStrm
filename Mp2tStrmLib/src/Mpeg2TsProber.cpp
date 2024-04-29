@@ -17,6 +17,8 @@
 
 #define ONESEC 90000
 
+static const BYTE PTS_DTS_MASK = 0xC0;
+
 class Mpeg2TsProber::Impl
 {
 public:
@@ -79,15 +81,22 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
 				case Pid2TypeMap::STREAM_TYPE::H265:
 				case Pid2TypeMap::STREAM_TYPE::HDMV:
 				{
+					UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
 					if (_startPTS == 0.0)
-						_startPTS = pes.ptsInSeconds();
-					double curpts = pes.ptsInSeconds();
-					if (curpts > 0.0 && curpts > _startPTS && curpts > _curPTS)
-						_curPTS = curpts;
-
-					if (_curPTS - _startPTS < 1.0)
 					{
+						_startPTS = pts_dts_flag == 0xC0 ? pes.dtsInSeconds() : pes.ptsInSeconds();
 						_frameCount++;
+					}
+
+					double curpts = pts_dts_flag == 0xC0 ? pes.dtsInSeconds() : pes.ptsInSeconds();
+
+					if (curpts > 0.0 && curpts > _startPTS && curpts > _curPTS)
+					{
+						_curPTS = curpts;
+						if (_curPTS - _startPTS < 1.0)
+						{
+							_frameCount++;
+						}
 					}
 				}
 				break;
