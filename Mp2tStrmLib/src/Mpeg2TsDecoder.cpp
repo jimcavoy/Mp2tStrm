@@ -171,7 +171,7 @@ void Mpeg2TsDecoder::stop() noexcept
 	for (int i = 0; i < 10; i++)
 	{
 		UdpData d(nullptr, UdpData::DEFAULT_BUFLEN);
-		const bool isFull = _inQueue.Get(std::move(d), 0);
+		bool isFull = _inQueue.Get(std::move(d), 0);
 	}
 
 	_run = false;

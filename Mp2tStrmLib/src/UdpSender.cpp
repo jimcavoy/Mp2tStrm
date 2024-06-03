@@ -157,6 +157,12 @@ void UdpSender::stop()
 	close(_pimpl->_socket);
 #endif
 	_pimpl->_run = false;
+
+	for (int i = 0; i < 10; i++)
+	{
+		AccessUnit au;
+		const bool isFull = _pimpl->_queue.Get(std::move(au), 0);
+	}
 }
 
 void UdpSender::operator()()
