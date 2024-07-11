@@ -45,6 +45,11 @@ void RateLimiter::operator() ()
 
 void RateLimiter::stop() noexcept
 {
+	for (int i = 0; i < 10; i++)
+	{
+		AccessUnit au;
+		const bool isFull = _inQueue.Get(std::move(au), 0);
+	}
 	_run = false;
 }
 
