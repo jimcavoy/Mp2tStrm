@@ -1,7 +1,7 @@
 # Mp2tStrm
 For users that have MPEG-2 TS files (*.ts)
 who need to restream them over an IP network.
-The MPEG-2 TS File Streamer `Mp2tStreamer` is a command line tool that
+The MPEG-2 TS File Streamer __Mp2tStreamer__ is a command line tool that
 will allow clients to retransmit a MPEG-2 TS stream from a file onto an
 IP network.  Unlike Colasoft Packet Player that retransmit video from
 a Wireshark capture file, this tool will allow users to replay a video
@@ -65,10 +65,10 @@ Mp2tStreamer.exe C:\Samples\somefile.ts -d udp://239.3.1.11:50000
 
 #### 2. Pipe a file into Mp2tStrm application to stream
 ```
-Mp2tStreamer.exe -d 239.3.1.11:50000 -f 29.97 < C:\Samples\somefile.ts
+Mp2tStreamer.exe -d udp://239.3.1.11:50000?ttl=255&localaddr=192.168.0.24 -f 29.97 < C:\Samples\somefile.ts
 ```
 
-Ensure the `-f` parameter is set greater than 0.
+Ensure the `-f|--framesPerSecond` option is set greater than 0.
 
 #### 3. Pipe Motion Imagery stream from another application
 ```
@@ -76,9 +76,9 @@ SampleApp.exe | Mp2tStreamer.exe --destinationUrl=udp://239.3.1.11:50000 --frame
 ```
 
 SampleApp.exe is an application that streams Motion Imagery data out to 
-console and is piped into Mp2tStreamer.exe.  Ensure the `-f` parameter is set greater than 0.
+console and is piped into Mp2tStreamer.exe.  Ensure the `-f|--framesPerSecond` option is set greater than 0.
 
 #### 4. Probe a file and exit
 ```
-Mp2tStreamer.exe C:\Samples\somefile.ts -p
+Mp2tStreamer.exe C:\Samples\somefile.ts --probe
 ```
