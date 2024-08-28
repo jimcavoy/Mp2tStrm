@@ -16,7 +16,7 @@ namespace ThetaStream
 		CommandLineParser(CommandLineParser&& other) noexcept;
 		CommandLineParser& operator=(CommandLineParser&& rhs) noexcept;
 
-		void parse(int argc, char** argv, const char* appname);
+		bool parse(int argc, char** argv, const char* appname);
 
 		const char* sourceFile() const;
 		const char* destinationIp() const;

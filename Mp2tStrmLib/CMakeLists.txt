@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project(Mp2tStrm
-    VERSION 1.0.1
+    VERSION 1.1.0
     DESCRIPTION "MPEG-2 TS Streamer Library"
     LANGUAGES C CXX
 )
@@ -28,6 +28,7 @@ set(CMAKE_DEBUG_POSTFIX d )
 
 find_package(mp2tp 1 CONFIG REQUIRED)
 find_package(h264p 1 CONFIG REQUIRED)
+find_package(Boost REQUIRED program_options url)
 
 add_library(Mp2tStrm STATIC)
 
@@ -72,14 +73,15 @@ add_dependencies(Mp2tStrm loki-lib)
 
 if (WIN32)
     include_directories(../../)
-    target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p wsock32 ws2_32)
+    target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p Boost::url Boost::program_options wsock32 ws2_32)
 else()
-    target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p pthread)
+    target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p Boost::url Boost::program_options pthread)
 endif()
 
 target_include_directories(Mp2tStrm
   PRIVATE 
     src/Mp2tStrm
+    ${Boost_INCLUDE_DIRS}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${LOKI_DIR}/include>

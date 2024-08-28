@@ -15,16 +15,15 @@ This project has an external dependency on:
 
 `Mp2tStrm` is a CMake project.  To configure and build the project use the following commands:
 
-    cmake -S . -B ./build
-
-<p></p>
-
-    cmake --build ./build
-    
-<p></p>
-
-    cmake --install ./build
-
+```
+cmake --preset=<windows-base|linux-base>
+```
+```
+cmake --build ./build
+```
+```
+cmake --install ./build
+```
 ### To Test
 The project has a test case.  Run the following command:
 
@@ -33,43 +32,53 @@ The project has a test case.  Run the following command:
 The test case duration is about 13 seconds.
 
 ## Usage
-Usage: __Mp2tStreamer__ [-?] [-p] [-s|-] [-d 127.0.0.1:50000] [-t [0..255]] [-i STRING] [-f DOUBLE]
+Usage: __Mp2tStreamer__ \<Source MPEG-2 TS File> OPTIONS
 
-Options:
+```
+Allowed options:
+  -? [ --help ]                Produce help message.
+  --source arg                 Source MPEG-2 TS file path. (default: - )
+  -d [ --destinationUrl ] arg  Destination URL. (default:
+                               udp://127.0.0.1:50000)
+  -f [ --framesPerSecond ] arg Frames per second. (default: 0)
+  -p [ --probe ]               Probe the source file and exit.
+```
+The `--destinationUrl` has an optional query component with the following attribute-value pairs:
 
-  `-s-`                           The source MPEG-2 TS file path (default: "-")
+- __ttl__. The time-to-live parameter.
+- __localaddr__. Transmit on a network adapter with an assigned IP address.
 
-  `-d 127.0.0.1:50000`             The destination socket address (ip:port) (default: "127.0.0.1:50000")
+For example, you want to stream using UDP on a multicast address of 239.3.1.11 with a time-to-live of 16 and transmit
+onto a network adapter with an assigned IP address of 192.168.0.24:
 
-  `-t [0..255]`                    Time to Live. (default: 16)
+```
+--destinationUrl=udp://239.3.1.11:50000?ttl=16&localaddr=192.168.0.24
+```
 
-  `-i STRING`                      Specifies the network interface IP address for the destination stream. 
-
-  `-f DOUBLE`                    Frames per second. (default: 0)
-
-  `-p`                          Probe the input stream and exit.
-
-Help options:
-
-  `-?`                            Show this help message
-
+__Note__: Presently, __Mp2tStreamer__ only supports UDP protocol.
 ### Examples
 
-__Stream a file.__
+#### 1. Stream a file
+```
+Mp2tStreamer.exe C:\Samples\somefile.ts -d udp://239.3.1.11:50000
+```
 
-    Mp2tStreamer.exe -s C:\Samples\somefile.ts -d 239.3.1.11:50000
+#### 2. Pipe a file into Mp2tStrm application to stream
+```
+Mp2tStreamer.exe -d 239.3.1.11:50000 -f 29.97 < C:\Samples\somefile.ts
+```
 
-__Pipe a file into Mp2tStrm application to stream.  Ensure the `-f` parameter is set greater than 0.__
+Ensure the `-f` parameter is set greater than 0.
 
-    Mp2tStreamer.exe -d 239.3.1.11:50000 -f 29.97 < C:\Samples\somefile.ts
-
-__Pipe Motion Imagery stream from another application.  Ensure the `-f` parameter is set greater than 0.__
-
-    SampleApp.exe | Mp2tStreamer.exe -d239.3.1.11:50000 -f 30
+#### 3. Pipe Motion Imagery stream from another application
+```
+SampleApp.exe | Mp2tStreamer.exe --destinationUrl=udp://239.3.1.11:50000 --framesPerSecond=30
+```
 
 SampleApp.exe is an application that streams Motion Imagery data out to 
-console and is piped into Mp2tStreamer.exe.
+console and is piped into Mp2tStreamer.exe.  Ensure the `-f` parameter is set greater than 0.
 
-__Probe a file and exit.__
-
-    Mp2tStreamer.exe -s C:\Samples\somefile.ts -p
+#### 4. Probe a file and exit
+```
+Mp2tStreamer.exe C:\Samples\somefile.ts -p
+```
