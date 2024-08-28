@@ -92,7 +92,7 @@ bool ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
         pos_desc.add("source", 1);
 
         desc.add_options()
-            ("help,?", "Produce help message")
+            ("help,?", "Produce help message.")
             ("source", po::value<string>(&_pimpl->sourceFile), "Source MPEG-2 TS file path. (default: - )")
             ("destinationUrl,d", po::value<string>(&destUrl), "Destination URL. (default: udp://127.0.0.1:50000)")
             ("framesPerSecond,f", po::value<double>(&_pimpl->framesPerSecond), "Frames per second. (default: 0)")
@@ -139,7 +139,7 @@ bool ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
             {
                 url::params_encoded_view params_ref = u.encoded_params();
 
-                for (auto v : params_ref)
+                for (const auto& v : params_ref)
                 {
                     url::decode_view dk(v.key);
                     url::decode_view dv(v.value);
