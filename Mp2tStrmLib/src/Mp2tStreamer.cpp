@@ -6,11 +6,6 @@
 #include "RateLimiter.h"
 #include "UdpSender.h"
 
-#ifdef PERFCNTR
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#include <Mp2tPerfCntr/Mp2tStrmCounter.h>
-#endif
-
 #ifdef _WIN32
 #include <io.h>
 #endif
@@ -139,27 +134,18 @@ int ThetaStream::Mp2tStreamer::run()
         limiter2senderQueue,
         _pimpl->_arguments.ttl(),
         _pimpl->_arguments.interfaceAddress());
-#ifdef PERFCNTR
-    Mp2tStrmCounter perfCounter(*_pimpl->_fileReader, *_pimpl->_limiter, *_pimpl->_sender);
-#endif
 
     std::thread readerThread{ &FileReader::operator(), _pimpl->_fileReader };
     std::thread decoderThread{ &Mpeg2TsDecoder::operator(), _pimpl->_decoder };
     std::thread limiterThread{ &RateLimiter::operator(), _pimpl->_limiter };
     std::thread senderThread{ &UdpSender::operator(), _pimpl->_sender };
-#ifdef PERFCNTR
-    std::thread perfCounterThread{ &Mp2tStrmCounter::operator(), &perfCounter };
-#endif
 
     readerThread.join();
     decoderThread.join();
     limiterThread.join();
     _pimpl->_sender->stop();
     senderThread.join();
-#ifdef PERFCNTR
-    perfCounter.stop();
-    perfCounterThread.join();
-#endif
+
     _pimpl->_tsRead = _pimpl->_fileReader->count();
     _pimpl->_udpSent = _pimpl->_sender->count();
     return 0;
@@ -240,4 +226,19 @@ int ThetaStream::Mp2tStreamer::width() const
 int ThetaStream::Mp2tStreamer::height() const
 {
     return _pimpl->_prober.h264Prober().height();
+}
+
+int ThetaStream::Mp2tStreamer::bytesSent() const
+{
+    return _pimpl->_sender->bytes();
+}
+
+long ThetaStream::Mp2tStreamer::position() const
+{
+    return _pimpl->_limiter->position();
+}
+
+int ThetaStream::Mp2tStreamer::framerate() const
+{
+    return _pimpl->_limiter->count();
 }
