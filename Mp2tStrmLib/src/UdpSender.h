@@ -7,19 +7,14 @@
 #include <queue>
 #include <memory>
 
-#ifdef PERFCNTR
-#include <Mp2tPerfCntr/BaseIOInterface.h>
-#endif 
+#include "BaseIOInterface.h"
 
 #ifndef QSIZE
 #define QSIZE 100
 #endif
 
 
-class UdpSender
-#ifdef PERFCNTR
-	: public BaseIOInterface
-#endif
+class UdpSender : public BaseIOInterface
 {
 public:
 	typedef AccessUnit DataType;

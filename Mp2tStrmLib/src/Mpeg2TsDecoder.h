@@ -11,14 +11,11 @@
 #include "FileReader.h"
 #include "UdpSender.h"
 
-#ifdef PERFCNTR
-#include <Mp2tPerfCntr/BaseIOInterface.h>
-#endif
+#include "BaseIOInterface.h"
+
 
 class Mpeg2TsDecoder : public lcss::TSParser
-#ifdef PERFCNTR
 	, public BaseIOInterface
-#endif
 {
 	typedef FileReader::QueueType InQueueType;
 	typedef UdpSender::QueueType OutQueueType;

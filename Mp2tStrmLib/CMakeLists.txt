@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project(Mp2tStrm
-    VERSION 1.1.0
+    VERSION 1.1.1
     DESCRIPTION "MPEG-2 TS Streamer Library"
     LANGUAGES C CXX
 )
@@ -38,6 +38,8 @@ target_sources(Mp2tStrm
     include/Mp2tStrm/Mp2tStreamer.h
     src/AccessUnit.cpp
     src/AccessUnit.h
+    src/BaseIOInterface.h
+    src/BaseIOInterface.cpp
     src/BoundedBuffer.h
     src/CommandLineParser.cpp
     src/FileReader.cpp

@@ -2,18 +2,14 @@
 
 #include "UdpSender.h"
 
-#ifdef PERFCNTR
-#include <Mp2tPerfCntr/BaseIOInterface.h>
-#endif
+#include "BaseIOInterface.h"
+
 
 #include <chrono>
 #include <queue>
 
 
-class RateLimiter
-#ifdef PERFCNTR
-	: public BaseIOInterface
-#endif
+class RateLimiter : public BaseIOInterface
 {
 	typedef UdpSender::QueueType QueueType;
 
