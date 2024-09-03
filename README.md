@@ -41,6 +41,7 @@ Allowed options:
   -d [ --destinationUrl ] arg  Destination URL. (default:
                                udp://127.0.0.1:50000)
   -f [ --framesPerSecond ] arg Frames per second. (default: 0)
+  -n [ --numTsPackets ] arg    Number of TS packets. (default: 7)
   -p [ --probe ]               Probe the source file and exit.
 ```
 The `--destinationUrl` has an optional query component with the following attribute-value pairs:

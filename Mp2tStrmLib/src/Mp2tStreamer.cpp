@@ -133,7 +133,8 @@ int ThetaStream::Mp2tStreamer::run()
         _pimpl->_arguments.destinationPort(),
         limiter2senderQueue,
         _pimpl->_arguments.ttl(),
-        _pimpl->_arguments.interfaceAddress());
+        _pimpl->_arguments.interfaceAddress(),
+        _pimpl->_arguments.numberOfTsPackets());
 
     std::thread readerThread{ &FileReader::operator(), _pimpl->_fileReader };
     std::thread decoderThread{ &Mpeg2TsDecoder::operator(), _pimpl->_decoder };

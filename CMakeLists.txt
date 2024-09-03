@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project (Mp2tStrm
-  VERSION 1.1.0
+  VERSION 1.2.0
   DESCRIPTION "MPEG-2 TS file streamer application and library."
   LANGUAGES C CXX
 )
@@ -26,9 +26,15 @@ install(TARGETS Mp2tStreamer)
 enable_testing()
 
 add_test(NAME Stream
-  COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts --destinationUrl=udp://239.3.1.11:50000?ttl=255 --framesPerSecond=25)
+  COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts --destinationUrl=udp://239.3.1.11:50000?ttl=255)
 set_tests_properties(Stream
   PROPERTIES PASS_REGULAR_EXPRESSION "TS Packets Read: 4234\nUDP Packets Sent: 604"
+)
+
+add_test(NAME NumTsPacketsStream
+  COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts --destinationUrl=udp://239.3.1.11:50000 --numTsPackets=5)
+set_tests_properties(NumTsPacketsStream
+  PROPERTIES PASS_REGULAR_EXPRESSION "TS Packets Read: 4234\nUDP Packets Sent: 846"
 )
 
 add_test(NAME Probe
