@@ -27,9 +27,9 @@ cmake --install ./build
 ### To Test
 The project has a test case.  Run the following command:
 
-    ctest --test-dir ./build
+    ctest --test-dir ./build -C <Debug|Release>
 
-The test case duration is about 13 seconds.
+The test case duration is about 25 seconds.
 
 ## Usage
 Usage: __Mp2tStreamer__ \<Source MPEG-2 TS File> OPTIONS
