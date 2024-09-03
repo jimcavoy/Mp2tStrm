@@ -23,6 +23,7 @@ namespace ThetaStream
             , ifaceAddr(other.ifaceAddr)
             , framesPerSecond(other.framesPerSecond)
             , probe(other.probe)
+            , numTsPackets(other.numTsPackets)
         {
 
         }
@@ -36,6 +37,7 @@ namespace ThetaStream
         std::string ifaceAddr;
         double framesPerSecond{};
         bool probe{ false };
+        int numTsPackets{ 7 };
     };
 }
 
@@ -96,6 +98,7 @@ bool ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
             ("source", po::value<string>(&_pimpl->sourceFile), "Source MPEG-2 TS file path. (default: - )")
             ("destinationUrl,d", po::value<string>(&destUrl), "Destination URL. (default: udp://127.0.0.1:50000)")
             ("framesPerSecond,f", po::value<double>(&_pimpl->framesPerSecond), "Frames per second. (default: 0)")
+            ("numTsPackets,n", po::value<int>(&_pimpl->numTsPackets), "Number of TS packets. (default: 7)")
             ("probe,p", "Probe the source file and exit.")
             ;
 
@@ -157,6 +160,15 @@ bool ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
                 }
             }
         }
+
+        if (vm.count("numTsPackets"))
+        {
+            if (_pimpl->numTsPackets < 1 || _pimpl->numTsPackets > 7)
+            {
+                cerr << "ERROR: The number of TS packets >= 1 or <= 7.";
+                return false;
+            }
+        }
     }
     catch (const std::exception& ex)
     {
@@ -194,6 +206,11 @@ int ThetaStream::CommandLineParser::ttl() const
 double ThetaStream::CommandLineParser::framesPerSecond() const
 {
     return _pimpl->framesPerSecond;
+}
+
+int ThetaStream::CommandLineParser::numberOfTsPackets() const
+{
+    return _pimpl->numTsPackets;
 }
 
 bool ThetaStream::CommandLineParser::probe() const

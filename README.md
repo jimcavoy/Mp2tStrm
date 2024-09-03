@@ -27,9 +27,9 @@ cmake --install ./build
 ### To Test
 The project has a test case.  Run the following command:
 
-    ctest --test-dir ./build
+    ctest --test-dir ./build -C <Debug|Release>
 
-The test case duration is about 13 seconds.
+The test case duration is about 25 seconds.
 
 ## Usage
 Usage: __Mp2tStreamer__ \<Source MPEG-2 TS File> OPTIONS
@@ -41,6 +41,7 @@ Allowed options:
   -d [ --destinationUrl ] arg  Destination URL. (default:
                                udp://127.0.0.1:50000)
   -f [ --framesPerSecond ] arg Frames per second. (default: 0)
+  -n [ --numTsPackets ] arg    Number of TS packets. (default: 7)
   -p [ --probe ]               Probe the source file and exit.
 ```
 The `--destinationUrl` has an optional query component with the following attribute-value pairs:

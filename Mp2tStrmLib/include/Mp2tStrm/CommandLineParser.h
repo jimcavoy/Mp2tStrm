@@ -24,6 +24,7 @@ namespace ThetaStream
 		int destinationPort() const;
 		int ttl() const;
 		double framesPerSecond() const;
+		int numberOfTsPackets() const;
 		bool probe() const;
 
 	private:
