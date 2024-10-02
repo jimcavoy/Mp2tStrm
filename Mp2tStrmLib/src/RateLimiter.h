@@ -18,15 +18,19 @@ public:
 
     void operator() ();
 
-    void stop() noexcept;
+    void start() override;
 
-    uint64_t count() noexcept;
+    void stop() override;
 
-    uint64_t bytes() noexcept;
+    void pause() override;
 
-    void address(char* addr, size_t len) noexcept;
+    uint64_t count() override;
 
-    long position() noexcept;
+    uint64_t bytes() override;
+
+    void address(char* addr, size_t len) override;
+
+    long position() override;
 
 private:
     void poll();

@@ -62,7 +62,11 @@ void RateLimiter::operator() ()
     }
 }
 
-void RateLimiter::stop() noexcept
+void RateLimiter::start()
+{
+}
+
+void RateLimiter::stop()
 {
     for (int i = 0; i < 10; i++)
     {
@@ -72,23 +76,28 @@ void RateLimiter::stop() noexcept
     _run = false;
 }
 
-uint64_t RateLimiter::count() noexcept
+void RateLimiter::pause()
+{
+
+}
+
+uint64_t RateLimiter::count()
 {
     uint64_t ret = _framecount;
     _framecount = 0;
     return ret;
 }
 
-uint64_t RateLimiter::bytes() noexcept
+uint64_t RateLimiter::bytes()
 {
     return 0;
 }
 
-void RateLimiter::address(char* addr, size_t len) noexcept
+void RateLimiter::address(char* addr, size_t len)
 {
 }
 
-long RateLimiter::position() noexcept
+long RateLimiter::position()
 {
     return _position;
 }

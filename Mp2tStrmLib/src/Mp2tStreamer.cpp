@@ -33,6 +33,7 @@ namespace ThetaStream
             , _decoder(other._decoder)
             , _limiter(other._limiter)
             , _sender(other._sender)
+            , _state(other._state)
         {}
         ~Impl() {};
 
@@ -47,6 +48,7 @@ namespace ThetaStream
         UdpSender* _sender{};
         Mpeg2TsProber _prober;
         std::streamsize _filesize{ 0 };
+        ThetaStream::Mp2tStreamer::STATE _state{ ThetaStream::Mp2tStreamer::STATE::STOP };
     };
 
     void Mp2tStreamer::Impl::ProbeFile()
@@ -152,6 +154,11 @@ int ThetaStream::Mp2tStreamer::run()
     return 0;
 }
 
+void ThetaStream::Mp2tStreamer::start()
+{
+
+}
+
 void ThetaStream::Mp2tStreamer::stop()
 {
     if (_pimpl->_fileReader != nullptr)
@@ -242,4 +249,9 @@ long ThetaStream::Mp2tStreamer::position() const
 int ThetaStream::Mp2tStreamer::framerate() const
 {
     return _pimpl->_limiter->count();
+}
+
+ThetaStream::Mp2tStreamer::STATE ThetaStream::Mp2tStreamer::getState() const
+{
+    return STATE();
 }

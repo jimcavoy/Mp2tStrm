@@ -166,6 +166,10 @@ void UdpSender::stop()
     }
 }
 
+void UdpSender::pause()
+{
+}
+
 void UdpSender::operator()()
 {
     while (_pimpl->_run)
@@ -177,6 +181,10 @@ void UdpSender::operator()()
             _pimpl->process(d);
         }
     }
+}
+
+void UdpSender::start()
+{
 }
 
 void UdpSender::Impl::send(const UdpData& data)
@@ -203,19 +211,19 @@ void UdpSender::Impl::send(const UdpData& data)
     }
     }
 
-uint64_t UdpSender::count() noexcept
+uint64_t UdpSender::count()
 {
     return _pimpl->_count;
 }
 
-uint64_t UdpSender::bytes() noexcept
+uint64_t UdpSender::bytes()
 {
     const uint64_t ret = _pimpl->_bytes;
     _pimpl->_bytes = 0;
     return ret;
 }
 
-void UdpSender::address(char* addr, size_t len) noexcept
+void UdpSender::address(char* addr, size_t len)
 {
 #ifdef _WIN32
     strcpy_s(addr, len, _pimpl->_address.c_str());
@@ -224,7 +232,7 @@ void UdpSender::address(char* addr, size_t len) noexcept
 #endif
 }
 
-long UdpSender::position() noexcept
+long UdpSender::position()
 {
     return 0;
 }
