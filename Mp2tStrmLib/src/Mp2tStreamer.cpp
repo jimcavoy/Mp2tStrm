@@ -162,6 +162,7 @@ void ThetaStream::Mp2tStreamer::start()
 {
     if (_pimpl->_state == ThetaStream::Mp2tStreamer::STATE::PAUSED || _pimpl->_state == ThetaStream::Mp2tStreamer::STATE::STOPPED)
     {
+        _pimpl->_limiter->start();
         _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::RUNNING;
     }
 }
@@ -195,6 +196,7 @@ void ThetaStream::Mp2tStreamer::pause()
 {
     if (_pimpl->_state == ThetaStream::Mp2tStreamer::STATE::RUNNING)
     {
+        _pimpl->_limiter->pause();
         _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::PAUSED;
     }
 }

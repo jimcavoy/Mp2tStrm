@@ -48,4 +48,5 @@ private:
     uint64_t _framecount{};
     long _position{};
     long _startPosition{};
+    bool _isPaused{ false };
 };
