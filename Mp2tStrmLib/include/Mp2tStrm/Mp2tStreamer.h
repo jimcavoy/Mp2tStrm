@@ -12,9 +12,9 @@ namespace ThetaStream
     public:
         enum class STATE
         {
-            STOP,
+            STOPPED,
             RUNNING,
-            PAUSE,
+            PAUSED,
             PROBING
         };
     public:

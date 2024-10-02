@@ -48,7 +48,7 @@ namespace ThetaStream
         UdpSender* _sender{};
         Mpeg2TsProber _prober;
         std::streamsize _filesize{ 0 };
-        ThetaStream::Mp2tStreamer::STATE _state{ ThetaStream::Mp2tStreamer::STATE::STOP };
+        ThetaStream::Mp2tStreamer::STATE _state{ ThetaStream::Mp2tStreamer::STATE::STOPPED };
     };
 
     void Mp2tStreamer::Impl::ProbeFile()
@@ -119,7 +119,9 @@ void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& argum
 
 void ThetaStream::Mp2tStreamer::probe()
 {
+    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::PROBING;
     _pimpl->ProbeFile();
+    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
 }
 
 int ThetaStream::Mp2tStreamer::run()
@@ -143,6 +145,8 @@ int ThetaStream::Mp2tStreamer::run()
     std::thread limiterThread{ &RateLimiter::operator(), _pimpl->_limiter };
     std::thread senderThread{ &UdpSender::operator(), _pimpl->_sender };
 
+    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::RUNNING;
+
     readerThread.join();
     decoderThread.join();
     limiterThread.join();
@@ -156,7 +160,10 @@ int ThetaStream::Mp2tStreamer::run()
 
 void ThetaStream::Mp2tStreamer::start()
 {
-
+    if (_pimpl->_state == ThetaStream::Mp2tStreamer::STATE::PAUSED || _pimpl->_state == ThetaStream::Mp2tStreamer::STATE::STOPPED)
+    {
+        _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::RUNNING;
+    }
 }
 
 void ThetaStream::Mp2tStreamer::stop()
@@ -180,11 +187,16 @@ void ThetaStream::Mp2tStreamer::stop()
     {
         _pimpl->_sender->stop();
     }
+
+    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
 }
 
 void ThetaStream::Mp2tStreamer::pause()
 {
-
+    if (_pimpl->_state == ThetaStream::Mp2tStreamer::STATE::RUNNING)
+    {
+        _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::PAUSED;
+    }
 }
 
 uint64_t ThetaStream::Mp2tStreamer::tsPacketsRead() const
@@ -253,5 +265,5 @@ int ThetaStream::Mp2tStreamer::framerate() const
 
 ThetaStream::Mp2tStreamer::STATE ThetaStream::Mp2tStreamer::getState() const
 {
-    return STATE();
+    return _pimpl->_state;
 }
