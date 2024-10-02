@@ -41,7 +41,10 @@ Allowed options:
   -d [ --destinationUrl ] arg  Destination URL. (default:
                                udp://127.0.0.1:50000)
   -f [ --framesPerSecond ] arg Frames per second. (default: 0)
-  -n [ --numTsPackets ] arg    Number of TS packets. (default: 7)
+  -n [ --numTsPackets ] arg    Number of TS packets in an UDP packet. (default:
+                               7)
+  -s [ --startPosition ] arg   The position where to start playing in seconds.
+                               (default: 0)
   -p [ --probe ]               Probe the source file and exit.
 ```
 The `--destinationUrl` has an optional query component with the following attribute-value pairs:
@@ -83,3 +86,10 @@ console and is piped into Mp2tStreamer.exe.  Ensure the `-f|--framesPerSecond` o
 ```
 Mp2tStreamer.exe C:\Samples\somefile.ts --probe
 ```
+
+#### 5. Start streaming at seconds from the start
+```
+Mp2tStreamer.exe --destinationUrl=udp://239.3.1.11:50000 --startPosition=120
+```
+
+Start streaming at `--startPosition=120` seconds from the start of the video.

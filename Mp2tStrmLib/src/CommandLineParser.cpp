@@ -24,6 +24,7 @@ namespace ThetaStream
             , framesPerSecond(other.framesPerSecond)
             , probe(other.probe)
             , numTsPackets(other.numTsPackets)
+            , startPosition(other.startPosition)
         {
 
         }
@@ -38,6 +39,7 @@ namespace ThetaStream
         double framesPerSecond{};
         bool probe{ false };
         int numTsPackets{ 7 };
+        int startPosition{};
     };
 }
 
@@ -98,7 +100,8 @@ bool ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
             ("source", po::value<string>(&_pimpl->sourceFile), "Source MPEG-2 TS file path. (default: - )")
             ("destinationUrl,d", po::value<string>(&destUrl), "Destination URL. (default: udp://127.0.0.1:50000)")
             ("framesPerSecond,f", po::value<double>(&_pimpl->framesPerSecond), "Frames per second. (default: 0)")
-            ("numTsPackets,n", po::value<int>(&_pimpl->numTsPackets), "Number of TS packets. (default: 7)")
+            ("numTsPackets,n", po::value<int>(&_pimpl->numTsPackets), "Number of TS packets in an UDP packet. (default: 7)")
+            ("startPosition,s", po::value<int>(&_pimpl->startPosition), "The position where to start playing in seconds. (default: 0)")
             ("probe,p", "Probe the source file and exit.")
             ;
 
@@ -216,4 +219,9 @@ int ThetaStream::CommandLineParser::numberOfTsPackets() const
 bool ThetaStream::CommandLineParser::probe() const
 {
     return _pimpl->probe;
+}
+
+int ThetaStream::CommandLineParser::startPosition() const
+{
+    return _pimpl->startPosition;
 }

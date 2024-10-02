@@ -34,7 +34,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 
 void banner()
 {
-	std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.2.0" << std::endl;
+	std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.3.0" << std::endl;
 	std::cerr << "Copyright (c) 2024 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 

@@ -26,6 +26,7 @@ namespace ThetaStream
 		double framesPerSecond() const;
 		int numberOfTsPackets() const;
 		bool probe() const;
+		int startPosition() const;
 
 	private:
 		class Impl;

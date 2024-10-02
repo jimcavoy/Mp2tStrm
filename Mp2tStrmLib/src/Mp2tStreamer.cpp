@@ -128,7 +128,7 @@ int ThetaStream::Mp2tStreamer::run()
 
     _pimpl->_fileReader = new FileReader(_pimpl->_arguments.sourceFile(), reader2decoderQueue, _pimpl->_filesize);
     _pimpl->_decoder = new Mpeg2TsDecoder(reader2decoderQueue, decoder2LimiterQueue);
-    _pimpl->_limiter = new RateLimiter(decoder2LimiterQueue, limiter2senderQueue, framesPerSecond());
+    _pimpl->_limiter = new RateLimiter(decoder2LimiterQueue, limiter2senderQueue, framesPerSecond(), _pimpl->_arguments.startPosition());
     _pimpl->_sender = new UdpSender(_pimpl->_arguments.destinationIp(),
         _pimpl->_arguments.destinationPort(),
         limiter2senderQueue,
