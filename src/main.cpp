@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <thread>
 
 ThetaStream::Mp2tStreamer* pMp2tStreamer;
 
@@ -38,6 +39,25 @@ void banner()
     std::cerr << "Copyright (c) 2024 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
+class InputHandler
+{
+public:
+    void operator()()
+    {
+        char c{};
+        while (true)
+        {
+            c = getchar();
+            switch (c)
+            {
+            case 'p': std::cerr << "Paused" << std::endl; break;
+            case 's': std::cerr << "Start" << std::endl; break;
+            case 'q': std::cerr << "Quit" << std::endl; return;
+            }
+        }
+    }
+};
+
 
 int main(int argc, char* argv[])
 {
@@ -66,6 +86,7 @@ int main(int argc, char* argv[])
             return err;
         }
 #endif
+
         ThetaStream::Mp2tStreamer streamer(cmdline);
         pMp2tStreamer = &streamer;
 
@@ -91,10 +112,15 @@ int main(int argc, char* argv[])
                 return -1;
             }
 
+            InputHandler handler;
+            std::thread inputThread{ &InputHandler::operator(), &handler };
+
             std::cerr << "Streaming file..." << std::endl << std::endl;
             ret = streamer.run();
             cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
             cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
+
+            inputThread.detach();
         }
 
         return ret;
