@@ -50,9 +50,9 @@ public:
             c = getchar();
             switch (c)
             {
-            case 'p': std::cerr << "Paused" << std::endl; break;
-            case 's': std::cerr << "Start" << std::endl; break;
-            case 'q': std::cerr << "Quit" << std::endl; return;
+            case 'p': std::cerr << "Paused" << std::endl; pMp2tStreamer->pause(); break;
+            case 's': std::cerr << "Start" << std::endl; pMp2tStreamer->start(); break;
+            case 'q': std::cerr << "Quit" << std::endl; pMp2tStreamer->stop(); return;
             }
         }
     }
