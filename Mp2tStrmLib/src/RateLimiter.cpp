@@ -24,7 +24,12 @@ void RateLimiter::operator() ()
 
     while (_run)
     {
-        if (!_isPaused)
+        if (_isPaused) 
+        {
+            // prevent busy-wait and to avoid more complicated solutions using sync mech, such as mutex and critical_sections.
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        else
         {
             AccessUnit au;
             const bool isFull = _inQueue.Get(std::move(au), 10);
