@@ -1,4 +1,4 @@
-# Mp2tStrm
+﻿# Mp2tStrm
 For users that have MPEG-2 TS files (*.ts)
 who need to restream them over an IP network.
 The MPEG-2 TS File Streamer __Mp2tStreamer__ is a command line tool that
@@ -93,3 +93,10 @@ Mp2tStreamer.exe --destinationUrl=udp://239.3.1.11:50000 --startPosition=120
 ```
 
 Start streaming at `--startPosition=120` seconds from the start of the video.
+
+### Runtime Commands
+When __Mp2tStreamer__ is playing, you can enter the following on the command line:
+
+- __Pause__.  Type <kbd>p</kbd> + <kbd>⏎ Enter</kbd> to pause playing.
+- __Start__.  After the playing is paused, type <kbd>s</kbd> + <kbd>⏎ Enter</kbd> to continue playing.
+- __Quit__.  Type <kbd>q</kbd> + <kbd>⏎ Enter</kbd> to quit playing and exit.
