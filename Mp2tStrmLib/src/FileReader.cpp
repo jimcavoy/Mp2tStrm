@@ -49,29 +49,37 @@ FileReader::~FileReader(void)
 
 }
 
-void FileReader::stop() noexcept
+void FileReader::start()
+{
+}
+
+void FileReader::stop()
 {
 	_run = false;
 }
 
-uint64_t FileReader::count() noexcept
+void FileReader::pause()
+{
+}
+
+uint64_t FileReader::count()
 {
 	return _count;
 }
 
-uint64_t FileReader::bytes() noexcept
+uint64_t FileReader::bytes()
 {
 	const uint64_t ret = _bytes;
 	_bytes = 0;
 	return ret;
 }
 
-long FileReader::position() noexcept
+long FileReader::position()
 {
 	return 0;
 }
 
-void FileReader::address(char* addr, size_t len) noexcept
+void FileReader::address(char* addr, size_t len)
 {
 #ifdef _WIN32
 	strcpy_s(addr, len, _address.c_str());

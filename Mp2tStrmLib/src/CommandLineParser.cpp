@@ -172,6 +172,15 @@ bool ThetaStream::CommandLineParser::parse(int argc, char** argv, const char* ap
                 return false;
             }
         }
+
+        if (vm.count("startPosition"))
+        {
+            if (_pimpl->startPosition < 0)
+            {
+                cerr << "ERROR: The option --startPosition < 0.";
+                return false;
+            }
+        }
     }
     catch (const std::exception& ex)
     {

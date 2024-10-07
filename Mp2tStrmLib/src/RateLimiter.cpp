@@ -24,45 +24,63 @@ void RateLimiter::operator() ()
 
     while (_run)
     {
-        AccessUnit au;
-        const bool isFull = _inQueue.Get(std::move(au), 10);
-        if (isFull)
+        if (_isPaused) 
         {
-            if (au.timestamp() == 0)
+            // prevent busy-wait and to avoid more complicated solutions using sync mech, such as mutex and critical_sections.
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        else
+        {
+            AccessUnit au;
+            const bool isFull = _inQueue.Get(std::move(au), 10);
+            if (isFull)
             {
-                _queue.push(std::move(au));
-            }
-            else if (_startTime == zero && au.timestamp() != 0 && _startPosition == 0)
-            {
-                _startTime = std::chrono::steady_clock::now();
-                _startPts = au.timestamp();
-                add = true;
-            }
-            else if (_startTime == zero && au.timestamp() != 0 && _startPosition > 0)
-            {
-                if (_startPosition < au.timestamp())
+                if (au.timestamp() == 0)
+                {
+                    _queue.push(std::move(au));
+                }
+                else if (_startTime == zero && au.timestamp() != 0 && _startPosition == 0)
                 {
                     _startTime = std::chrono::steady_clock::now();
                     _startPts = au.timestamp();
                     add = true;
                 }
-            }
+                else if (_startTime == zero && au.timestamp() != 0 && _startPosition > 0)
+                {
+                    if (_startPosition < au.timestamp())
+                    {
+                        _startTime = std::chrono::steady_clock::now();
+                        _startPts = au.timestamp();
+                        add = true;
+                    }
+                }
 
-            if (add)
+                if (add)
+                {
+                    _queue.push(std::move(au));
+                }
+            }
+            else if (_queue.empty())
             {
-                _queue.push(std::move(au));
+                stop();
             }
+            poll();
         }
-        else if (_queue.empty())
-        {
-            stop();
-        }
-
-        poll();
     }
 }
 
-void RateLimiter::stop() noexcept
+void RateLimiter::start()
+{
+    if (_isPaused)
+    {
+        _startTime = std::chrono::steady_clock::now();
+        AccessUnit& au = _queue.front();
+        _startPts = au.timestamp();
+        _isPaused = false;
+    }
+}
+
+void RateLimiter::stop()
 {
     for (int i = 0; i < 10; i++)
     {
@@ -72,23 +90,28 @@ void RateLimiter::stop() noexcept
     _run = false;
 }
 
-uint64_t RateLimiter::count() noexcept
+void RateLimiter::pause()
+{
+    _isPaused = true;
+}
+
+uint64_t RateLimiter::count()
 {
     uint64_t ret = _framecount;
     _framecount = 0;
     return ret;
 }
 
-uint64_t RateLimiter::bytes() noexcept
+uint64_t RateLimiter::bytes()
 {
     return 0;
 }
 
-void RateLimiter::address(char* addr, size_t len) noexcept
+void RateLimiter::address(char* addr, size_t len)
 {
 }
 
-long RateLimiter::position() noexcept
+long RateLimiter::position()
 {
     return _position;
 }

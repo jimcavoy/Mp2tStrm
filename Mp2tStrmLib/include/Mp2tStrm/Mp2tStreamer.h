@@ -10,6 +10,14 @@ namespace ThetaStream
     class Mp2tStreamer
     {
     public:
+        enum class STATE
+        {
+            STOPPED,
+            RUNNING,
+            PAUSED,
+            PROBING
+        };
+    public:
         Mp2tStreamer();
         Mp2tStreamer(const ThetaStream::CommandLineParser& arguments);
         ~Mp2tStreamer();
@@ -19,6 +27,8 @@ namespace ThetaStream
         void probe();
 
         int run();
+
+        void start();
 
         void stop();
 
@@ -47,6 +57,8 @@ namespace ThetaStream
         long position() const;
 
         int framerate() const;
+
+        STATE getState() const;
 
     private:
         class Impl;
