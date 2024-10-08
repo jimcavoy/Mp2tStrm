@@ -43,6 +43,7 @@ void RateLimiter::operator() ()
                 {
                     _startTime = std::chrono::steady_clock::now();
                     _startPts = au.timestamp();
+                    _firstPts = _startPts;
                     add = true;
                 }
                 else if (_startTime == zero && au.timestamp() != 0 && _startPosition > 0)
@@ -52,6 +53,10 @@ void RateLimiter::operator() ()
                         _startTime = std::chrono::steady_clock::now();
                         _startPts = au.timestamp();
                         add = true;
+                    }
+                    else if (_firstPts == 0)
+                    {
+                        _firstPts = au.timestamp();
                     }
                 }
 
@@ -142,7 +147,7 @@ void RateLimiter::poll()
 #ifdef DEBUG
                 std::cout << runTime << ", " << clockTime << ", " << time_span.count() << std::endl;
 #endif
-                _position = runTime;
+                _position = au.timestamp() - _firstPts;
                 _framecount++;
             }
             _outQueue.Put(std::move(au));

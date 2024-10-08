@@ -155,6 +155,8 @@ int ThetaStream::Mp2tStreamer::run()
 
     _pimpl->_tsRead = _pimpl->_fileReader->count();
     _pimpl->_udpSent = _pimpl->_sender->count();
+
+    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
     return 0;
 }
 
