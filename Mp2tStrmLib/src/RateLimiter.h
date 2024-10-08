@@ -43,6 +43,7 @@ private:
     double _framePerSeconds{};
     std::chrono::steady_clock::time_point _startTime{};
     uint64_t _startPts{};
+    uint64_t _firstPts{};
     std::queue<AccessUnit> _queue;
     long _window;
     uint64_t _framecount{};
