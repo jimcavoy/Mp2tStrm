@@ -48,15 +48,17 @@ void RateLimiter::operator() ()
                 }
                 else if (_startTime == zero && au.timestamp() != 0 && _startPosition > 0)
                 {
-                    if (_startPosition < au.timestamp())
+                    if (_firstPts == 0)
+                    {
+                        _firstPts = au.timestamp();
+                    }
+
+                    uint64_t timespan = au.timestamp() - _firstPts;
+                    if (_startPosition < timespan)
                     {
                         _startTime = std::chrono::steady_clock::now();
                         _startPts = au.timestamp();
                         add = true;
-                    }
-                    else if (_firstPts == 0)
-                    {
-                        _firstPts = au.timestamp();
                     }
                 }
 

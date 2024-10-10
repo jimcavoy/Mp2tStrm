@@ -52,5 +52,5 @@ add_test(NAME StartAt10sec
   COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/svt_testset_420_720p50_klved.ts --destinationUrl=udp://239.3.1.11:50000 --startPosition=10)
 set_tests_properties(StartAt10sec
   PROPERTIES PASS_REGULAR_EXPRESSION "TS Packets Read: 268899
-UDP Packets Sent: 32181"
+UDP Packets Sent: 31759"
 )
