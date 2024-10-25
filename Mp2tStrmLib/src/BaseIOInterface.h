@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+#include <cstdint>
 
 class BaseIOInterface
 {
@@ -12,9 +14,9 @@ public:
 
     virtual void pause() = 0;
 
-    virtual unsigned long long count() = 0;
+    virtual uint64_t count() = 0;
 
-    virtual unsigned long long bytes() = 0;
+    virtual uint64_t bytes() = 0;
 
     virtual void address(char* addr, size_t len) = 0;
 
