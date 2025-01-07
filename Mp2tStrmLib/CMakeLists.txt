@@ -6,21 +6,17 @@ project(Mp2tStrm
     LANGUAGES C CXX
 )
 
-# include the module `ExternalProject`
-include(ExternalProject)
+# include the module `FetchContent`
+include(FetchContent)
 
 # Add an external project from a downloaded source archive
-ExternalProject_Add(loki-lib
+FetchContent_Declare(loki-lib
   URL https://github.com/snaewe/loki-lib/archive/refs/tags/Release_0_1_5.tar.gz
   URL_HASH MD5=74e60c683f745dc15c6e772927349483
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
 )
-
-ExternalProject_Get_Property(loki-lib SOURCE_DIR)
-
-set(LOKI_DIR "${SOURCE_DIR}")
+FetchContent_MakeAvailable(loki-lib)
+FetchContent_GetProperties(loki-lib)
+set(LOKI_DIR "${loki-lib_SOURCE_DIR}")
 
 # set the postfix "d" for the resulting .so or .dll files when building the
 # library in debug mode
@@ -70,8 +66,6 @@ add_compile_definitions(QSIZE=100)
 
 # specify the C++ standard
 target_compile_features(Mp2tStrm PUBLIC cxx_std_14)
-
-add_dependencies(Mp2tStrm loki-lib)
 
 if (WIN32)
     include_directories(../../)
