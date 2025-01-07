@@ -36,15 +36,15 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 #include <unistd.h>
 #include <termios.h>
 
-void RestoreKeyboardBlocking(struct termios *initial_settings)
+void RestoreKeyboardBlocking(struct termios* initial_settings)
 {
-	tcsetattr(0, TCSANOW, initial_settings);
+    tcsetattr(0, TCSANOW, initial_settings);
 }
 
-void SetKeyboardNonBlock(struct termios *initial_settings)
+void SetKeyboardNonBlock(struct termios* initial_settings)
 {
     struct termios new_settings;
-    tcgetattr(0,initial_settings);
+    tcgetattr(0, initial_settings);
 
     new_settings = *initial_settings;
     new_settings.c_lflag &= ~ICANON;
@@ -56,12 +56,12 @@ void SetKeyboardNonBlock(struct termios *initial_settings)
     tcsetattr(0, TCSANOW, &new_settings);
 }
 
-char getcharAlt() 
+char getcharAlt()
 {
     char buff[2];
-    int l = read(STDIN_FILENO,buff,1);
-    if (l>0) return buff[0];
-    return ( EOF);
+    int l = read(STDIN_FILENO, buff, 1);
+    if (l > 0) return buff[0];
+    return (EOF);
 }
 
 #endif
@@ -95,7 +95,9 @@ public:
             case 'p': std::cerr << "Paused" << std::endl; pMp2tStreamer->pause(); break;
             case 's': std::cerr << "Start" << std::endl; pMp2tStreamer->start(); break;
             case 'q': std::cerr << "Quit" << std::endl; pMp2tStreamer->stop(); return;
+#ifndef _WIN32
             default: sleep(1);
+#endif
             }
         }
 
@@ -165,9 +167,9 @@ int main(int argc, char* argv[])
             std::cerr << "Streaming file..." << std::endl << std::endl;
             ret = streamer.run();
             cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
-            cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;       
+            cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
 
-            run = false;     
+            run = false;
 
             inputThread.detach();
         }
