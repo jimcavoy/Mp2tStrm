@@ -10,6 +10,7 @@
 #include <thread>
 
 ThetaStream::Mp2tStreamer* pMp2tStreamer;
+bool run = true;
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -31,12 +32,44 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
         return FALSE;
     }
 }
+#else
+#include <unistd.h>
+#include <termios.h>
+
+void RestoreKeyboardBlocking(struct termios *initial_settings)
+{
+	tcsetattr(0, TCSANOW, initial_settings);
+}
+
+void SetKeyboardNonBlock(struct termios *initial_settings)
+{
+    struct termios new_settings;
+    tcgetattr(0,initial_settings);
+
+    new_settings = *initial_settings;
+    new_settings.c_lflag &= ~ICANON;
+    new_settings.c_lflag &= ~ECHO;
+    new_settings.c_lflag &= ~ISIG;
+    new_settings.c_cc[VMIN] = 0;
+    new_settings.c_cc[VTIME] = 0;
+
+    tcsetattr(0, TCSANOW, &new_settings);
+}
+
+char getcharAlt() 
+{
+    char buff[2];
+    int l = read(STDIN_FILENO,buff,1);
+    if (l>0) return buff[0];
+    return ( EOF);
+}
+
 #endif
 
 void banner()
 {
-    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.3.0" << std::endl;
-    std::cerr << "Copyright (c) 2024 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
+    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.3.1" << std::endl;
+    std::cerr << "Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
 class InputHandler
@@ -44,17 +77,31 @@ class InputHandler
 public:
     void operator()()
     {
+#ifndef _WIN32
+        struct termios term_settings;
+        SetKeyboardNonBlock(&term_settings);
+#endif
+
         char c{};
-        while (true)
+        while (run)
         {
+#ifdef _WIN32
             c = getchar();
+#else
+            c = getcharAlt();
+#endif
             switch (c)
             {
             case 'p': std::cerr << "Paused" << std::endl; pMp2tStreamer->pause(); break;
             case 's': std::cerr << "Start" << std::endl; pMp2tStreamer->start(); break;
             case 'q': std::cerr << "Quit" << std::endl; pMp2tStreamer->stop(); return;
+            default: sleep(1);
             }
         }
+
+#ifndef _WIN32
+        RestoreKeyboardBlocking(&term_settings);
+#endif
     }
 };
 
@@ -118,7 +165,9 @@ int main(int argc, char* argv[])
             std::cerr << "Streaming file..." << std::endl << std::endl;
             ret = streamer.run();
             cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
-            cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
+            cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;       
+
+            run = false;     
 
             inputThread.detach();
         }
