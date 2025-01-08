@@ -77,11 +77,6 @@ class InputHandler
 public:
     void operator()()
     {
-#ifndef _WIN32
-        struct termios term_settings;
-        SetKeyboardNonBlock(&term_settings);
-#endif
-
         char c{};
         while (run)
         {
@@ -94,16 +89,17 @@ public:
             {
             case 'p': std::cerr << "Paused" << std::endl; pMp2tStreamer->pause(); break;
             case 's': std::cerr << "Start" << std::endl; pMp2tStreamer->start(); break;
-            case 'q': std::cerr << "Quit" << std::endl; pMp2tStreamer->stop(); return;
+            case 'q': 
+            {
+                std::cerr << "Quit" << std::endl; pMp2tStreamer->stop();
+                run = false;
+                break;
+            }
 #ifndef _WIN32
             default: sleep(1);
 #endif
             }
         }
-
-#ifndef _WIN32
-        RestoreKeyboardBlocking(&term_settings);
-#endif
     }
 };
 
@@ -161,6 +157,11 @@ int main(int argc, char* argv[])
                 return -1;
             }
 
+#ifndef _WIN32
+            // Utilize an non-blocking getchar()
+            struct termios term_settings;
+            SetKeyboardNonBlock(&term_settings);
+#endif
             InputHandler handler;
             std::thread inputThread{ &InputHandler::operator(), &handler };
 
@@ -172,6 +173,10 @@ int main(int argc, char* argv[])
             run = false;
 
             inputThread.detach();
+
+#ifndef _WIN32
+            RestoreKeyboardBlocking(&term_settings);
+#endif
         }
 
         return ret;
