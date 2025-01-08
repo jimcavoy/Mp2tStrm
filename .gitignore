@@ -21,3 +21,4 @@ CMakeCache.txt
 *.lib
 CTestTestfile.cmake
 *.lastcodeanalysissucceeded
+.vscode/launch.json
