@@ -10,10 +10,13 @@
 #include <io.h>
 #endif
 #include <fcntl.h>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string.h>
 #include <thread>
+
+namespace fs = std::filesystem;
 
 namespace ThetaStream
 {
@@ -86,8 +89,9 @@ namespace ThetaStream
                 bool result = _prober.parse(buffer.data(), (UINT32)len);
                 if (!result)
                 {
+                    fs::path srcPath(_arguments.sourceFile());
                     char szErr[512]{};
-                    sprintf(szErr, "Wrong format. %s is not an MPEG-2 TS file.", _arguments.sourceFile());
+                    sprintf(szErr, "Unsupported multimedia container format. The file, %s, is not an MPEG-2 TS file.", srcPath.filename().string().c_str());
                     std::runtime_error exp(szErr);
                     throw exp;
                 }
