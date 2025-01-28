@@ -132,7 +132,7 @@ void ThetaStream::Mp2tStreamer::probe()
         _pimpl->ProbeFile();
         _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
     }
-    catch (const std::exception& ex)
+    catch (const std::runtime_error& ex)
     {
         _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
         throw ex;
