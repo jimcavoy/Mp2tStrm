@@ -68,7 +68,7 @@ char getcharAlt()
 
 void banner()
 {
-    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.3.1" << std::endl;
+    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.0" << std::endl;
     std::cerr << "Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
@@ -113,9 +113,9 @@ int main(int argc, char* argv[])
         banner();
 
         ThetaStream::CommandLineParser cmdline;
-        bool r = cmdline.parse(argc, argv, "Mp2tStreamer.exe");
+        bool result = cmdline.parse(argc, argv, "Mp2tStreamer.exe");
 
-        if (!r)
+        if (!result)
         {
             return -1;
         }
@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& exp)
     {
-        cerr << exp.what() << endl;
+        cerr << "*** ERROR: " << exp.what() << " ***" << endl;
         return -1;
     }
 }

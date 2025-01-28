@@ -11,37 +11,37 @@
 using namespace std;
 
 FileReader::FileReader(const char* filename, FileReader::QueueType& q, std::streamsize filesize)
-	: _queue(q)
-	, _count(0)
-	, _bytes(0)
-	, _run(true)
-	, _filesize(filesize)
+    : _queue(q)
+    , _count(0)
+    , _bytes(0)
+    , _run(true)
+    , _filesize(filesize)
 {
-	if (strcmp(filename, "-") == 0)
-	{
+    if (strcmp(filename, "-") == 0)
+    {
 #ifdef _WIN32
-		_setmode(_fileno(stdin), _O_BINARY);
+        _setmode(_fileno(stdin), _O_BINARY);
 #endif
-		_ifile.reset(&cin, [](...) {});
-	}
-	else
-	{
-		ifstream* tsfile = new std::ifstream(filename, std::ios::binary);
-		if (!tsfile->is_open())
-		{
-			char szErr[512]{};
+        _ifile.reset(&cin, [](...) {});
+    }
+    else
+    {
+        ifstream* tsfile = new std::ifstream(filename, std::ios::binary);
+        if (!tsfile->is_open())
+        {
+            char szErr[512]{};
 #ifdef _WIN32
-			sprintf_s(szErr, "Failed to open input file %s", filename);
+            sprintf_s(szErr, "Failed to open input file %s", filename);
 #else
-			sprintf(szErr, "Failed to open input file %s", filename);
+            sprintf(szErr, "Failed to open input file %s", filename);
 #endif
-			std::runtime_error exp(szErr);
-			throw exp;
-		}
-		_ifile.reset(tsfile);
-	}
+            std::runtime_error exp(szErr);
+            throw exp;
+        }
+        _ifile.reset(tsfile);
+    }
 
-	_address = filename;
+    _address = filename;
 }
 
 FileReader::~FileReader(void)
@@ -55,7 +55,7 @@ void FileReader::start()
 
 void FileReader::stop()
 {
-	_run = false;
+    _run = false;
 }
 
 void FileReader::pause()
@@ -64,53 +64,53 @@ void FileReader::pause()
 
 uint64_t FileReader::count()
 {
-	return _count;
+    return _count;
 }
 
 uint64_t FileReader::bytes()
 {
-	const uint64_t ret = _bytes;
-	_bytes = 0;
-	return ret;
+    const uint64_t ret = _bytes;
+    _bytes = 0;
+    return ret;
 }
 
 long FileReader::position()
 {
-	return 0;
+    return 0;
 }
 
 void FileReader::address(char* addr, size_t len)
 {
 #ifdef _WIN32
-	strcpy_s(addr, len, _address.c_str());
+    strcpy_s(addr, len, _address.c_str());
 #else
-	strcpy(addr, _address.c_str());
+    strcpy(addr, _address.c_str());
 #endif
 }
 
 void FileReader::operator()()
 {
-	while (_run)
-	{
-		if (_ifile->good())
-		{
-			_ifile->read((char*)_buffer.data(), _bufsiz);
-			const streamsize len = _ifile->gcount();
-			_queue.Put(UdpData(_buffer.data(), len));
-			_count += len / 188;
-			_bytes += len;
-			_readcount += len;
-		}
-		else
-		{
-			if (_readcount >= _filesize)
-			{
-				stop();
-			}
-			else // sometimes we get a bad I/O read so reset the state
-			{
-				_ifile->clear();
-			}
-		}
-	}
+    while (_run)
+    {
+        if (_ifile->good())
+        {
+            _ifile->read((char*)_buffer.data(), _bufsiz);
+            const streamsize len = _ifile->gcount();
+            _queue.Put(UdpData(_buffer.data(), len));
+            _count += len / 188;
+            _bytes += len;
+            _readcount += len;
+        }
+        else
+        {
+            if (_readcount >= _filesize)
+            {
+                stop();
+            }
+            else // sometimes we get a bad I/O read so reset the state
+            {
+                _ifile->clear();
+            }
+        }
+    }
 }
