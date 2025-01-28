@@ -83,7 +83,14 @@ namespace ThetaStream
             {
                 ifile->read((char*)buffer.data(), 9212);
                 const streamsize len = ifile->gcount();
-                _prober.parse(buffer.data(), (UINT32)len);
+                bool result = _prober.parse(buffer.data(), (UINT32)len);
+                if (!result)
+                {
+                    char szErr[512]{};
+                    sprintf(szErr, "Wrong format. %s is not an MPEG-2 TS file.", _arguments.sourceFile());
+                    std::runtime_error exp(szErr);
+                    throw exp;
+                }
                 _filesize += len;
             }
             else
@@ -119,9 +126,17 @@ void ThetaStream::Mp2tStreamer::init(const ThetaStream::CommandLineParser& argum
 
 void ThetaStream::Mp2tStreamer::probe()
 {
-    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::PROBING;
-    _pimpl->ProbeFile();
-    _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
+    try
+    {
+        _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::PROBING;
+        _pimpl->ProbeFile();
+        _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
+    }
+    catch (const std::exception& ex)
+    {
+        _pimpl->_state = ThetaStream::Mp2tStreamer::STATE::STOPPED;
+        throw ex;
+    }
 }
 
 int ThetaStream::Mp2tStreamer::run()
