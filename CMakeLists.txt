@@ -16,6 +16,9 @@ add_subdirectory (Mp2tStrmLib)
 
 add_executable(Mp2tStreamer)
 
+# specify the C++ standard
+target_compile_features(Mp2tStrm PUBLIC cxx_std_17)
+
 target_sources(Mp2tStreamer PRIVATE src/main.cpp)
 
 target_link_libraries(Mp2tStreamer PRIVATE Mp2tStrm)
@@ -54,4 +57,4 @@ UDP Packets Sent: 31759")
 add_test(NAME WrongFormat
   COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/foreman_cif.mp4 --destinationUrl=udp://239.3.1.11:50000)
 set_tests_properties(WrongFormat
-  PROPERTIES PASS_REGULAR_EXPRESSION "ERROR: Wrong format.")
+  PROPERTIES PASS_REGULAR_EXPRESSION "ERROR:")

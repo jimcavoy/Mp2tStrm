@@ -65,10 +65,9 @@ set_property(TARGET Mp2tStrm PROPERTY POSITION_INDEPENDENT_CODE ON)
 add_compile_definitions(QSIZE=100)
 
 # specify the C++ standard
-target_compile_features(Mp2tStrm PUBLIC cxx_std_14)
+target_compile_features(Mp2tStrm PUBLIC cxx_std_17)
 
 if (WIN32)
-    include_directories(../../)
     target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p Boost::url Boost::program_options wsock32 ws2_32)
 else()
     target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p Boost::url Boost::program_options pthread)
