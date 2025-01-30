@@ -157,7 +157,7 @@ void Mpeg2TsDecoder::operator()()
         const bool isFull = _inQueue.Get(std::move(d), 100);
         if (isFull)
         {
-            parse(d.data(), (UINT32)d.length());
+            parse(d.data(), (UINT32)d.length(), false);
         }
         else
         {
