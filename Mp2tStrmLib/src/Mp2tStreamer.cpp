@@ -59,6 +59,7 @@ namespace ThetaStream
         using namespace std;
         std::shared_ptr<std::istream> ifile;
         std::array<BYTE, 9212> buffer{};
+        bool strict = true;
 
         if (strcmp(_arguments.sourceFile(), "-") == 0)
         {
@@ -85,17 +86,20 @@ namespace ThetaStream
             if (ifile->good())
             {
                 ifile->read((char*)buffer.data(), 9212);
-                const streamsize len = ifile->gcount();
-                bool result = _prober.parse(buffer.data(), (UINT32)len);
+                _filesize += ifile->gcount();
+                bool result = _prober.parse(buffer.data(), (UINT32)ifile->gcount(), strict);
                 if (!result)
                 {
-                    fs::path srcPath(_arguments.sourceFile());
-                    char szErr[512]{};
-                    sprintf(szErr, "Unsupported multimedia container format. The file, %s, is not an MPEG-2 TS file.", srcPath.filename().string().c_str());
-                    std::runtime_error exp(szErr);
-                    throw exp;
+                    if (_filesize == 9212)
+                    {
+                        fs::path srcPath(_arguments.sourceFile());
+                        char szErr[512]{};
+                        sprintf(szErr, "Unsupported multimedia container format. The file, %s, is not an MPEG-2 TS file.", srcPath.filename().string().c_str());
+                        std::runtime_error exp(szErr);
+                        throw exp;
+                    }
                 }
-                _filesize += len;
+                strict = false;
             }
             else
             {
