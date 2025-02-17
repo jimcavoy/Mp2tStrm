@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project (Mp2tStrm
-  VERSION 1.4.0
+  VERSION 1.4.1
   DESCRIPTION "MPEG-2 TS file streamer application and library."
   LANGUAGES C CXX
 )

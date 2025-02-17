@@ -59,7 +59,6 @@ namespace ThetaStream
         using namespace std;
         std::shared_ptr<std::istream> ifile;
         std::array<BYTE, 9212> buffer{};
-        bool strict = true;
 
         if (strcmp(_arguments.sourceFile(), "-") == 0)
         {
@@ -87,7 +86,7 @@ namespace ThetaStream
             {
                 ifile->read((char*)buffer.data(), 9212);
                 _filesize += ifile->gcount();
-                bool result = _prober.parse(buffer.data(), (UINT32)ifile->gcount(), strict);
+                bool result = _prober.parse(buffer.data(), (UINT32)ifile->gcount(), true);
                 if (!result)
                 {
                     if (_filesize == 9212)
@@ -98,8 +97,11 @@ namespace ThetaStream
                         std::runtime_error exp(szErr);
                         throw exp;
                     }
+                    else
+                    {
+                        cerr << "WARNING: MPEG-2 TS stream is malformed at file position " << _filesize << " bytes." << endl;
+                    }
                 }
-                strict = false;
             }
             else
             {

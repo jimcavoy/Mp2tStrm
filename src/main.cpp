@@ -68,7 +68,7 @@ char getcharAlt()
 
 void banner()
 {
-    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.0" << std::endl;
+    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.1" << std::endl;
     std::cerr << "Copyright (c) 2025 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
