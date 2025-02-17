@@ -146,18 +146,20 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 
 void Mpeg2TsDecoder::operator()()
 {
-    //using namespace std;
-
-    // Print the header for the csv file
-    // cout << "Type,PTS,PTS(secs),DTS,DTS(secs),Wallclock,PCR" << endl;
-
+    size_t pos = 0;
     while (_run)
     {
         UdpData d(nullptr, UdpData::DEFAULT_BUFLEN);
         const bool isFull = _inQueue.Get(std::move(d), 100);
+        
         if (isFull)
         {
-            parse(d.data(), (UINT32)d.length(), false);
+            pos += d.length();
+            bool result = parse(d.data(), (UINT32)d.length(), true);
+            if (!result)
+            {
+                cerr << "WARNING: MPEG-2 TS stream is malformed at file position " << pos << " bytes." << endl;
+            }
         }
         else
         {
