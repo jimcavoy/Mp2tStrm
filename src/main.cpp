@@ -140,12 +140,12 @@ int main(int argc, char* argv[])
             std::cerr << "Probing input MPEG-2 TS stream..." << std::endl << std::endl;
             streamer.probe();
 
-            std::cout << "Duration: " << streamer.duration() << std::endl;
-            std::cout << "Average Bitrate: " << streamer.averageBitrate() << std::endl;
+            std::cout << "Duration: " << streamer.duration() << " seconds" << std::endl;
+            std::cout << "Average Bitrate: " << streamer.averageBitrate() << " kilobits/second" << std::endl;
             std::cout << "Metadata Carriage: " << streamer.metadataCarriage() << std::endl;
-            std::cout << "Metadata Frequency: " << streamer.metadataFrequency() << std::endl;
-            std::cout << "Frame/Seconds: " << streamer.framesPerSecond() << std::endl;
-            std::cout << "Resolution: " << streamer.width() << "x" << streamer.height() << std::endl << std::endl;
+            std::cout << "Metadata Frequency: " << streamer.metadataFrequency() << " Hertz" << std::endl;
+            std::cout << "Framerate: " << streamer.framesPerSecond() << " frames/second" << std::endl;
+            std::cout << "Resolution: " << streamer.width() << "x" << streamer.height() << " pixels" << std::endl << std::endl;
         }
 
         if (!cmdline.probe())

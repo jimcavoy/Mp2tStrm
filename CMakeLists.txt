@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project (Mp2tStrm
-  VERSION 1.4.1
+  VERSION 1.4.2
   DESCRIPTION "MPEG-2 TS file streamer application and library."
   LANGUAGES C CXX
 )
@@ -41,12 +41,12 @@ set_tests_properties(NumTsPacketsStream
 add_test(NAME Probe
   COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts --probe)
 set_tests_properties(Probe
-  PROPERTIES PASS_REGULAR_EXPRESSION "Duration: 11.96
-Average Bitrate: 532.436
+  PROPERTIES PASS_REGULAR_EXPRESSION "11.96 seconds
+Average Bitrate: 532.436 kilobits/second
 Metadata Carriage: Synchronous
-Metadata Frequency: 25
-Frame/Seconds: 25
-Resolution: 352x288")
+Metadata Frequency: 25 Hertz
+Framerate: 25 frames/second
+Resolution: 352x288 pixels")
 
 add_test(NAME StartAt10sec
   COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/svt_testset_420_720p50_klved.ts --destinationUrl=udp://239.3.1.11:50000 --startPosition=10)
