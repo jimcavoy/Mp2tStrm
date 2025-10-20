@@ -41,7 +41,7 @@ set_tests_properties(NumTsPacketsStream
 add_test(NAME Probe
   COMMAND Mp2tStreamer ${PROJECT_SOURCE_DIR}/sample/foreman_cif_klv.ts --probe)
 set_tests_properties(Probe
-  PROPERTIES PASS_REGULAR_EXPRESSION "11.96 seconds
+  PROPERTIES PASS_REGULAR_EXPRESSION "Duration: 11.96 seconds
 Average Bitrate: 532.436 kilobits/second
 Metadata Carriage: Synchronous
 Metadata Frequency: 25 Hertz
