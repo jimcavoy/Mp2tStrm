@@ -25,6 +25,17 @@ target_link_libraries(Mp2tStreamer PRIVATE Mp2tStrm)
 
 install(TARGETS Mp2tStreamer)
 
+# Create Package
+set(CPACK_PACKAGE_NAME "Mp2tStreamer")
+set(CPACK_PACKAGE_VENDOR "ThetaStream Consulting")
+set(CPACK_PACKAGE_CONTACT "jimcavoy@thetastream.com")
+set(CPACK_PACKAGE_DESCRIPTION, "MPEG-2 TS File Streamer.")
+if (UNIX)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_GENERATOR "DEB")
+endif ()
+include(CPack)
+
 # Test cases
 enable_testing()
 
