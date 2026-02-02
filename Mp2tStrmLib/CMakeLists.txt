@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project(Mp2tStrm
-    VERSION 1.4.1
+    VERSION 1.4.2
     DESCRIPTION "MPEG-2 TS Streamer Library"
     LANGUAGES C CXX
 )
@@ -65,7 +65,7 @@ set_property(TARGET Mp2tStrm PROPERTY POSITION_INDEPENDENT_CODE ON)
 add_compile_definitions(QSIZE=100)
 
 # specify the C++ standard
-target_compile_features(Mp2tStrm PUBLIC cxx_std_17)
+target_compile_features(Mp2tStrm PUBLIC cxx_std_20)
 
 if (WIN32)
     target_link_libraries(Mp2tStrm PRIVATE lcss::mp2tp thetastream::h264p Boost::url Boost::program_options wsock32 ws2_32)

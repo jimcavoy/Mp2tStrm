@@ -35,6 +35,8 @@ The test case duration is about 67 seconds to complete.
 Usage: __Mp2tStreamer__ \<Source MPEG-2 TS File> OPTIONS
 
 ```
+Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.3
+Copyright (c) 2026 ThetaStream Consulting, jimcavoy@thetastream.com
 Allowed options:
   -? [ --help ]                Produce help message.
   --source arg                 Source MPEG-2 TS file path. (default: - )

@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.21)
 
 project (Mp2tStrm
-  VERSION 1.4.2
+  VERSION 1.4.3
   DESCRIPTION "MPEG-2 TS file streamer application and library."
   LANGUAGES C CXX
 )
@@ -17,7 +17,7 @@ add_subdirectory (Mp2tStrmLib)
 add_executable(Mp2tStreamer)
 
 # specify the C++ standard
-target_compile_features(Mp2tStrm PUBLIC cxx_std_17)
+target_compile_features(Mp2tStrm PUBLIC cxx_std_20)
 
 target_sources(Mp2tStreamer PRIVATE src/main.cpp)
 
