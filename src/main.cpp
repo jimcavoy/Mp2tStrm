@@ -14,6 +14,7 @@ bool run = true;
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <conio.h>
 
 BOOL CtrlHandler(DWORD fdwCtrlType)
 {
@@ -68,7 +69,7 @@ char getcharAlt()
 
 void banner()
 {
-    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.3" << std::endl;
+    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.4" << std::endl;
     std::cerr << "Copyright (c) 2026 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
@@ -81,7 +82,10 @@ public:
         while (run)
         {
 #ifdef _WIN32
-            c = getchar();
+            if (_kbhit())
+            {
+                c = _getch();
+            }
 #else
             c = getcharAlt();
 #endif
@@ -95,10 +99,13 @@ public:
                 run = false;
                 break;
             }
-#ifndef _WIN32
-            default: sleep(1);
-#endif
             }
+            c = 0;
+#ifdef _WIN32
+            Sleep(500);
+#else
+            sleep(1);
+#endif
         }
     }
 };
