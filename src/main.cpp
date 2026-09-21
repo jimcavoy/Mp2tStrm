@@ -69,7 +69,7 @@ char getcharAlt()
 
 void banner()
 {
-    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.4" << std::endl;
+    std::cerr << "Mp2tStreamer: MPEG-2 TS Streamer Application v1.4.5" << std::endl;
     std::cerr << "Copyright (c) 2026 ThetaStream Consulting, jimcavoy@thetastream.com" << std::endl;
 }
 
@@ -171,15 +171,14 @@ int main(int argc, char* argv[])
 #endif
             InputHandler handler;
             std::thread inputThread{ &InputHandler::operator(), &handler };
+            inputThread.detach();  // Run input thread in the background
 
             std::cerr << "Streaming file..." << std::endl << std::endl;
             ret = streamer.run();
             cout << "TS Packets Read: " << streamer.tsPacketsRead() << endl;
             cout << "UDP Packets Sent: " << streamer.udpPacketsSent() << endl;
 
-            run = false;
-
-            inputThread.detach();
+            run = false; // stop the input thread            
 
 #ifndef _WIN32
             RestoreKeyboardBlocking(&term_settings);
@@ -190,6 +189,7 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& exp)
     {
+        run = false; // stop the input thread
         cerr << "*** ERROR: " << exp.what() << " ***" << endl;
         return -1;
     }
