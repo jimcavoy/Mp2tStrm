@@ -15,7 +15,7 @@ static auto t0 = std::chrono::steady_clock::now();
 
 namespace
 {
-    const BYTE PTS_DTS_MASK = 0xC0;
+    const uint8_t PTS_DTS_MASK = 0xC0;
     char TAG_HDMV[] = { (char)0x48, (char)0x44, (char)0x4D, (char)0x56, (char)0xFF, (char)0x1B, (char)0x44, (char)0x3F, 0 };
     char TAG_HDPR[] = { (char)0x48, (char)0x44, (char)0x50, (char)0x52, (char)0xFF, (char)0x1B, (char)0x67, (char)0x3F, 0 };
 
@@ -23,7 +23,7 @@ namespace
     {
         using namespace std;
 
-        UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
+        uint16_t pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
         auto t1 = chrono::steady_clock::now();
         chrono::duration<double> time_span = t1 - t0;
         double pcr = pcrClock.timeInSeconds();
@@ -66,7 +66,7 @@ Mpeg2TsDecoder::Mpeg2TsDecoder(Mpeg2TsDecoder::InQueueType& iqueue, Mpeg2TsDecod
 
 void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 {
-    const BYTE* data = pckt.getData();
+    const uint8_t* data = pckt.getData();
     updateClock(pckt);
 
     if (pckt.payloadUnitStart())
@@ -90,7 +90,7 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
         else // Packetize Elementary Stream packet
         {
             lcss::PESPacket pes;
-            const UINT16 bytesParsed = pes.parse(data);
+            const uint16_t bytesParsed = pes.parse(data);
             if (bytesParsed > 0)
             {
                 switch (_pmtHelper.packetType(pckt.PID()))
@@ -108,10 +108,10 @@ void Mpeg2TsDecoder::onPacket(lcss::TransportPacket& pckt)
 
                     if (_currentAU.timestamp() == 0)
                     {
-                        UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
+                        uint16_t pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
                         if (pts_dts_flag > 0x00)
                         {
-                            UINT64 ts = pts_dts_flag == 0xC0 ? pes.dts() : pes.pts();
+                            uint64_t ts = pts_dts_flag == 0xC0 ? pes.dts() : pes.pts();
                             assert(ts != 0);
                             _currentAU.setTimestamp(ts);
                         }
@@ -155,7 +155,7 @@ void Mpeg2TsDecoder::operator()()
         if (isFull)
         {
             pos += d.length();
-            bool result = parse(d.data(), (UINT32)d.length(), true);
+            bool result = parse(d.data(), (uint32_t)d.length(), true);
             if (!result)
             {
                 cerr << "WARNING: MPEG-2 TS stream is malformed at file position " << pos << " bytes." << endl;
@@ -216,7 +216,7 @@ void Mpeg2TsDecoder::updateClock(const lcss::TransportPacket& pckt)
         const lcss::AdaptationField* adf = pckt.getAdaptationField();
         if (adf != nullptr && adf->length() > 0 && adf->PCR_flag())
         {
-            BYTE pcr[6]{};
+            uint8_t pcr[6]{};
             adf->getPCR(pcr);
             _pcrClock.setTime(pcr);
         }

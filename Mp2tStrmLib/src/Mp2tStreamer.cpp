@@ -58,7 +58,7 @@ namespace ThetaStream
     {
         using namespace std;
         std::shared_ptr<std::istream> ifile;
-        std::array<BYTE, 9212> buffer{};
+        std::array<uint8_t, 9212> buffer{};
 
         if (strcmp(_arguments.sourceFile(), "-") == 0)
         {
@@ -86,7 +86,7 @@ namespace ThetaStream
             {
                 ifile->read((char*)buffer.data(), 9212);
                 _filesize += ifile->gcount();
-                bool result = _prober.parse(buffer.data(), (UINT32)ifile->gcount(), true);
+                bool result = _prober.parse(buffer.data(), (uint32_t)ifile->gcount(), true);
                 if (!result)
                 {
                     if (_filesize == 9212)
