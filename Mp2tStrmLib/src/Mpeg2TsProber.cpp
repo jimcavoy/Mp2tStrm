@@ -17,7 +17,7 @@
 
 #define ONESEC 90000
 
-static const BYTE PTS_DTS_MASK = 0xC0;
+static const uint8_t PTS_DTS_MASK = 0xC0;
 
 class Mpeg2TsProber::Impl
 {
@@ -36,9 +36,9 @@ public:
     int _metadataCarriage{};
     int _klvSetCount{};
     int _frameCount{};
-    UINT64 _startKlvPTS{};
-    UINT64 _prevKlvPTS{};
-    UINT64 _systemTime{};
+    uint64_t _startKlvPTS{};
+    uint64_t _prevKlvPTS{};
+    uint64_t _systemTime{};
     PCRClock _pcrClock;
 };
 
@@ -46,7 +46,7 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
 {
     bool isAdaptationField = false;
     // Get the TS packet payload minus header
-    const BYTE* data = pckt.getData();
+    const uint8_t* data = pckt.getData();
 
     updateSystemClock(pckt);
 
@@ -71,7 +71,7 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
         else
         {
             lcss::PESPacket pes;
-            const UINT16 bytesParsed = pes.parse(data);
+            const uint16_t bytesParsed = pes.parse(data);
             if (bytesParsed > 0)
             {
                 switch (_pmtProxy.packetType(pckt.PID()))
@@ -81,7 +81,7 @@ void Mpeg2TsProber::Impl::onPacket(lcss::TransportPacket& pckt)
                 case Pid2TypeMap::STREAM_TYPE::H265:
                 case Pid2TypeMap::STREAM_TYPE::HDMV:
                 {
-                    UINT16 pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
+                    uint16_t pts_dts_flag = (pes.flags2() & PTS_DTS_MASK);
                     if (_startPTS == 0.0)
                     {
                         _startPTS = pts_dts_flag == 0xC0 ? pes.dtsInSeconds() : pes.ptsInSeconds();
@@ -170,7 +170,7 @@ void Mpeg2TsProber::Impl::updateSystemClock(const lcss::TransportPacket& pckt)
         const lcss::AdaptationField* adf = pckt.getAdaptationField();
         if (adf != nullptr && adf->length() > 0 && adf->PCR_flag())
         {
-            BYTE pcr[6]{};
+            uint8_t pcr[6]{};
             adf->getPCR(pcr);
             _pcrClock.setTime(pcr);
             _systemTime = _pcrClock.baseTime(); // Use the 90 kHz

@@ -38,14 +38,14 @@ void Pid2TypeMap::update(const lcss::ProgramMapTable& pmt)
 					// registration_descriptor
 					if (desc.tag() == 0x05)
 					{
-						desc.value((BYTE*)value);
+						desc.value((uint8_t*)value);
 						strncpy(format_identifier, value, 4);
 						break;
 					}
 					// metadata_descriptor
 					else if (desc.tag() == 0x26)
 					{
-						desc.value((BYTE*)value);
+						desc.value((uint8_t*)value);
 						strncpy(format_identifier, value + 3, 4);
 						break;
 					}
@@ -69,7 +69,7 @@ void Pid2TypeMap::update(const lcss::ProgramMapTable& pmt)
 					// registration_descriptor
 					if (desc.tag() == 0x05)
 					{
-						desc.value((BYTE*)value);
+						desc.value((uint8_t*)value);
 						break;
 					}
 				}
@@ -92,7 +92,7 @@ void Pid2TypeMap::update(const lcss::ProgramMapTable& pmt)
 					// registration_descriptor
 					if (desc.tag() == 0x05)
 					{
-						desc.value((BYTE*)value);
+						desc.value((uint8_t*)value);
 						break;
 					}
 				}
